@@ -1,1 +1,1 @@
-# apollo-graphql-react
+# React + TypeScript + Vite
