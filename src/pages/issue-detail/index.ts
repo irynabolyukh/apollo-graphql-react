@@ -1,0 +1,2 @@
+export { IssueDetailPage } from './IssueDetailPage';
+

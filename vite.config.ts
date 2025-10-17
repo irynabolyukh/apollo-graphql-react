@@ -4,6 +4,12 @@ import path from 'path';
 
 export default defineConfig({
     plugins: [react()],
+    optimizeDeps: {
+        include: ['@apollo/client', '@apollo/client/react', 'graphql', 'rxjs'],
+        esbuildOptions: {
+            target: 'es2020',
+        },
+    },
     build: {
         cssCodeSplit: true,
         cssMinify: 'esbuild',
