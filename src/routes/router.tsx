@@ -1,20 +1,28 @@
+import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import { IssuesListPage } from '@/pages/issues-list';
-import { IssueDetailPage } from '@/pages/issue-detail';
-import { NotFoundPage } from '@/pages/not-found';
+import { RootLayout } from '@/shared/layouts/root-layout';
 import { ROUTES } from '@/routes/constants';
+
+const IssuesListPage = lazy(() => import('@/pages/issues-list').then((m) => ({ default: m.IssuesListPage })));
+const IssueDetailPage = lazy(() => import('@/pages/issue-detail').then((m) => ({ default: m.IssueDetailPage })));
+const NotFoundPage = lazy(() => import('@/pages/not-found').then((m) => ({ default: m.NotFoundPage })));
 
 export const router = createBrowserRouter([
     {
-        path: ROUTES.HOME,
-        element: <IssuesListPage />,
-    },
-    {
-        path: ROUTES.ISSUE_DETAILS,
-        element: <IssueDetailPage />,
-    },
-    {
-        path: ROUTES.NOT_FOUND,
-        element: <NotFoundPage />,
+        element: <RootLayout />,
+        children: [
+            {
+                path: ROUTES.HOME,
+                element: <IssuesListPage />,
+            },
+            {
+                path: ROUTES.ISSUE_DETAILS,
+                element: <IssueDetailPage />,
+            },
+            {
+                path: ROUTES.NOT_FOUND,
+                element: <NotFoundPage />,
+            },
+        ],
     },
 ]);

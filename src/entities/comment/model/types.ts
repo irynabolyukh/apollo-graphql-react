@@ -26,7 +26,7 @@ export function mapToComment(node: CommentNode): Comment {
         bodyHTML: node.bodyHTML as string,
         createdAt: node.createdAt as string,
         updatedAt: node.updatedAt as string,
-        author: node.author
+        author: node.author && node.author.login
             ? {
                   login: node.author.login,
                   avatarUrl: node.author.avatarUrl as string,

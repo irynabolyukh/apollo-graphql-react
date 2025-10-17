@@ -11,8 +11,9 @@ import { GET_REPOSITORY_ISSUES } from '@/entities/issue/api';
 import { mapToIssueListItem, type IssueListItem } from '@/entities/issue/model';
 import { IssueCard } from '@/entities/issue/ui';
 import type { GetRepositoryIssuesQuery, GetRepositoryIssuesQueryVariables } from '@/graphql/generated';
-import { Loading } from '@/shared/ui/loading';
+import Loading from '@/shared/ui/loading';
 import Button from '@/shared/ui/button';
+import { Filters, Select, SearchInput, IssuesList, EmptyState, LoadMoreContainer } from './IssuesListPage.styles';
 
 export const IssuesListPage = () => {
     const [filterOption, setFilterOption] = useState<IssueFilterOption>('OPEN');
@@ -66,74 +67,57 @@ export const IssuesListPage = () => {
     };
 
     return (
-        <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-            <header style={{ marginBottom: '30px' }}>
-                <h1>
-                    {GITHUB_CONFIG.owner}/{GITHUB_CONFIG.repo} - Issues
-                </h1>
-            </header>
-
-            <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-                <select
+        <>
+            <Filters>
+                <Select
                     value={filterOption}
                     onChange={(e) => setFilterOption(e.target.value as IssueFilterOption)}
-                    style={{ padding: '8px 12px', fontSize: '14px' }}
                 >
                     <option value={ISSUE_FILTER_OPTIONS.OPEN}>Open</option>
                     <option value={ISSUE_FILTER_OPTIONS.CLOSED}>Closed</option>
                     <option value={ISSUE_FILTER_OPTIONS.ALL}>All</option>
-                </select>
+                </Select>
 
-                <input
+                <SearchInput
                     type="text"
                     placeholder="Search issues..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    style={{ padding: '8px 12px', fontSize: '14px', flex: 1 }}
                 />
-            </div>
+            </Filters>
 
             {loading && issues.length === 0 ? (
                 <Loading message="Loading issues..." />
             ) : (
                 <>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    <IssuesList>
                         {filteredIssues.map((issue) => (
                             <IssueCard
                                 key={issue.id}
                                 issue={issue}
                             />
                         ))}
-                    </div>
+                    </IssuesList>
 
                     {filteredIssues.length === 0 && searchQuery && (
-                        <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+                        <EmptyState>
                             <p>No issues found matching "{searchQuery}"</p>
-                        </div>
+                        </EmptyState>
                     )}
 
                     {pageInfo?.hasNextPage && (
-                        <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                        <LoadMoreContainer>
                             <Button
                                 onClick={handleLoadMore}
                                 loading={loading}
                                 aria-label="Load more issues"
-                                style={{
-                                    padding: '10px 20px',
-                                    fontSize: '14px',
-                                    cursor: loading ? 'not-allowed' : 'pointer',
-                                    backgroundColor: '#0366d6',
-                                    color: '#fff',
-                                    border: 'none',
-                                    borderRadius: '6px',
-                                }}
                             >
-                                {loading ? 'Loading...' : 'Load More'}
+                                Load More
                             </Button>
-                        </div>
+                        </LoadMoreContainer>
                     )}
                 </>
             )}
-        </div>
+        </>
     );
 };

@@ -1,5 +1,24 @@
 import type { IssueDetail } from '@/entities/issue/model/types';
 import { formatDate } from '@/shared/lib/utils';
+import { CardLarge } from '@/shared/ui/card';
+import Link from '@/shared/ui/link';
+import { IssueBadge, LabelBadge } from '@/shared/ui/badge';
+import HtmlContent from '@/shared/ui/html-content';
+import {
+    Header,
+    TitleRow,
+    Title,
+    IssueNumber,
+    Labels,
+    AuthorSection,
+    Avatar,
+    AuthorInfo,
+    AuthorName,
+    Metadata,
+    Separator,
+    Body,
+    Footer,
+} from './IssueDetails.styles';
 
 interface IssueDetailsProps {
     issue: IssueDetail;
@@ -7,126 +26,78 @@ interface IssueDetailsProps {
 
 export const IssueDetails = ({ issue }: IssueDetailsProps) => {
     return (
-        <div
-            style={{
-                padding: '24px',
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                backgroundColor: '#fff',
-            }}
-        >
-            <div style={{ marginBottom: '20px' }}>
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '12px',
-                        marginBottom: '12px',
-                    }}
-                >
-                    <span
-                        style={{
-                            padding: '6px 12px',
-                            borderRadius: '4px',
-                            fontSize: '14px',
-                            fontWeight: 'bold',
-                            backgroundColor: issue.state === 'OPEN' ? '#28a745' : '#6f42c1',
-                            color: '#fff',
-                        }}
+        <CardLarge>
+            <Header>
+                <TitleRow>
+                    <IssueBadge
+                        $state={issue.state}
+                        $size="medium"
                     >
                         {issue.state}
-                    </span>
-                    <h1 style={{ margin: 0 }}>
+                    </IssueBadge>
+                    <Title>
                         {issue.title}
-                        <span style={{ color: '#666', fontSize: '24px', marginLeft: '8px' }}>#{issue.number}</span>
-                    </h1>
-                </div>
+                        <IssueNumber>#{issue.number}</IssueNumber>
+                    </Title>
+                </TitleRow>
 
                 {issue.labels.length > 0 && (
-                    <div
-                        style={{
-                            display: 'flex',
-                            gap: '6px',
-                            flexWrap: 'wrap',
-                            marginBottom: '12px',
-                        }}
-                    >
+                    <Labels>
                         {issue.labels.map((label) => (
-                            <span
+                            <LabelBadge
                                 key={label.id}
-                                style={{
-                                    padding: '4px 10px',
-                                    borderRadius: '12px',
-                                    fontSize: '12px',
-                                    backgroundColor: `#${label.color}`,
-                                    color: '#fff',
-                                }}
+                                $color={label.color}
                                 title={label.description || undefined}
                             >
                                 {label.name}
-                            </span>
+                            </LabelBadge>
                         ))}
-                    </div>
+                    </Labels>
                 )}
 
-                <div style={{ fontSize: '14px', color: '#666', marginBottom: '20px' }}>
-                    <span>
-                        Opened by{' '}
-                        <a
-                            href={issue.author?.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{ color: '#0366d6' }}
-                        >
-                            {issue.author?.login || 'unknown'}
-                        </a>
-                    </span>
-                    <span style={{ margin: '0 8px' }}>•</span>
-                    <span>{formatDate(issue.createdAt)}</span>
-                    {issue.closedAt && (
-                        <>
-                            <span style={{ margin: '0 8px' }}>•</span>
-                            <span>Closed {formatDate(issue.closedAt)}</span>
-                        </>
+                <AuthorSection>
+                    {issue.author?.avatarUrl && (
+                        <Avatar
+                            src={issue.author.avatarUrl}
+                            alt={issue.author.login}
+                        />
                     )}
-                    <span style={{ margin: '0 8px' }}>•</span>
-                    <span>💬 {issue.commentsCount} comments</span>
-                </div>
-            </div>
+                    <AuthorInfo>
+                        <AuthorName>
+                            <Link
+                                external
+                                href={issue.author?.url || '#'}
+                            >
+                                {issue.author?.login || 'unknown'}
+                            </Link>
+                        </AuthorName>
+                        <Metadata>
+                            <span>opened {formatDate(issue.createdAt)}</span>
+                            {issue.closedAt && (
+                                <>
+                                    <Separator>•</Separator>
+                                    <span>closed {formatDate(issue.closedAt)}</span>
+                                </>
+                            )}
+                            <Separator>•</Separator>
+                            <span>💬 {issue.commentsCount} comments</span>
+                        </Metadata>
+                    </AuthorInfo>
+                </AuthorSection>
+            </Header>
 
-            <div
-                style={{
-                    padding: '16px',
-                    backgroundColor: '#f6f8fa',
-                    borderRadius: '6px',
-                    marginBottom: '24px',
-                }}
-            >
-                <div
-                    style={{
-                        whiteSpace: 'pre-wrap',
-                        wordBreak: 'break-word',
-                        lineHeight: '1.6',
-                    }}
-                >
-                    {issue.body || 'No description provided.'}
-                </div>
-            </div>
+            <Body>
+                <HtmlContent html={issue.bodyHTML} />
+            </Body>
 
-            <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #ddd' }}>
-                <a
+            <Footer>
+                <Link
+                    external
                     href={issue.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                        color: '#0366d6',
-                        textDecoration: 'none',
-                        fontSize: '14px',
-                    }}
                 >
                     View on GitHub →
-                </a>
-            </div>
-        </div>
+                </Link>
+            </Footer>
+        </CardLarge>
     );
 };

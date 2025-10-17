@@ -3,9 +3,27 @@ import { defineConfig } from 'vite';
 import path from 'path';
 
 export default defineConfig({
-    plugins: [react()],
+    plugins: [
+        react({
+            babel: {
+                plugins: [
+                    [
+                        'babel-plugin-styled-components',
+                        {
+                            displayName: true,
+                            fileName: true,
+                            ssr: false,
+                            minify: true,
+                            transpileTemplateLiterals: true,
+                            pure: true,
+                        },
+                    ],
+                ],
+            },
+        }),
+    ],
     optimizeDeps: {
-        include: ['@apollo/client', '@apollo/client/react', 'graphql', 'rxjs'],
+        include: ['@apollo/client', '@apollo/client/react', 'graphql', 'rxjs', 'styled-components'],
         esbuildOptions: {
             target: 'es2020',
         },
@@ -18,6 +36,18 @@ export default defineConfig({
         sourcemap: false,
         minify: 'esbuild',
         reportCompressedSize: false,
+        chunkSizeWarningLimit: 600,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'react-vendor': ['react', 'react-dom', 'react/jsx-runtime'],
+                    'apollo-vendor': ['@apollo/client', 'graphql'],
+                    'router-vendor': ['react-router', 'react-router-dom'],
+                    'styled-vendor': ['styled-components'],
+                    'sanitize-vendor': ['dompurify'],
+                },
+            },
+        },
     },
     esbuild: {
         drop: ['console', 'debugger'],

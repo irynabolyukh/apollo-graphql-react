@@ -2,3 +2,4 @@
 
 ### Improvements
 - add ?search and ?filter params to url
+- add theme provider

@@ -15,6 +15,9 @@ export const apolloClient = new ApolloClient({
         },
     }),
     cache: new InMemoryCache({
+        possibleTypes: {
+            Actor: ['Bot', 'EnterpriseUserAccount', 'Mannequin', 'Organization', 'User'],
+        },
         typePolicies: {
             Repository: {
                 fields: {

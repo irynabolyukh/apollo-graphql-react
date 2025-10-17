@@ -1,38 +1,14 @@
-import { Link } from 'react-router-dom';
 import { PATHS } from '@/routes/constants';
+import { Container, ErrorCode, Title, Description } from './NotFoundPage.styles';
+import Link from '@/shared/ui/link';
 
 export const NotFoundPage = () => {
     return (
-        <div
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minHeight: '100vh',
-                padding: '20px',
-                textAlign: 'center',
-            }}
-        >
-            <h1 style={{ fontSize: '72px', margin: '0 0 16px 0', color: '#333' }}>404</h1>
-            <h2 style={{ fontSize: '24px', margin: '0 0 16px 0', color: '#666' }}>Page Not Found</h2>
-            <p style={{ fontSize: '16px', margin: '0 0 24px 0', color: '#666' }}>
-                The page you're looking for doesn't exist or has been moved.
-            </p>
-            <Link
-                to={PATHS.home}
-                style={{
-                    padding: '12px 24px',
-                    fontSize: '16px',
-                    backgroundColor: '#0366d6',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                }}
-            >
-                Go to Home
-            </Link>
-        </div>
+        <Container>
+            <ErrorCode>404</ErrorCode>
+            <Title>Page Not Found</Title>
+            <Description>The page you're looking for doesn't exist or has been moved.</Description>
+            <Link to={PATHS.home}>Go to Home</Link>
+        </Container>
     );
 };

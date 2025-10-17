@@ -74,7 +74,7 @@ export function mapToIssueListItem(node: IssueNode): IssueListItem {
         updatedAt: node.updatedAt as string,
         url: node.url as string,
         bodyText: node.bodyText || '',
-        author: node.author
+        author: node.author && node.author.login
             ? {
                   login: node.author.login,
                   avatarUrl: node.author.avatarUrl as string,
@@ -103,7 +103,7 @@ export function mapToIssueDetail(issue: IssueDetailsNode): IssueDetail {
         url: issue.url as string,
         body: issue.body || '',
         bodyHTML: issue.bodyHTML as string,
-        author: issue.author
+        author: issue.author && issue.author.login
             ? {
                   login: issue.author.login,
                   avatarUrl: issue.author.avatarUrl as string,
