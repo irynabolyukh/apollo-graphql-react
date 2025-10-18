@@ -7,7 +7,7 @@ export const ErrorPage = () => {
     const error = useRouteError();
 
     let errorMessage = 'An unexpected error occurred';
-    let errorStatus = 500;
+    let errorStatus: number | undefined;
     let errorDetails: string | undefined;
 
     if (isRouteErrorResponse(error)) {
@@ -28,7 +28,10 @@ export const ErrorPage = () => {
             <Description>{errorMessage}</Description>
 
             <Actions>
-                <Button onClick={() => window.location.reload()} variant="primary">
+                <Button
+                    onClick={() => window.location.reload()}
+                    variant="primary"
+                >
                     Reload Page
                 </Button>
                 <Link to={PATHS.home}>
@@ -45,4 +48,3 @@ export const ErrorPage = () => {
         </Container>
     );
 };
-

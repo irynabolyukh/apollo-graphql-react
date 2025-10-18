@@ -1,23 +1,24 @@
-import { useMemo } from 'react';
-import { GITHUB_CONFIG, type IssueFilterOption } from '@/app/config/constants.ts';
+import { useMemo, useCallback } from 'react';
+import { type IssueFilterOption, GITHUB_CONFIG } from '@/app/config';
 import { buildGitHubSearchQuery } from '@/shared/lib/utils';
-import { useFilterIssuesQuery } from './useFilterIssuesQuery.ts';
-import { useSearchIssuesQuery } from './useSearchIssuesQuery.ts';
+import { useFilterIssuesQuery } from './useFilterIssuesQuery';
+import { useSearchIssuesQuery } from './useSearchIssuesQuery';
 import { mapToIssueListItem, type IssueListItem } from '../model';
-import type { IssueEdge, SearchResultItemEdge } from '@/graphql/generated.ts';
+import { extractEdges, extractPageInfo, hasTypename, isNonNull } from '@/shared/lib/apollo/apollo-helpers';
 
 /**
- * Orchestration hook that combines regular issues query and search query
- * Automatically switches between them based on search input
+ * Main hook for fetching repository issues with filtering and search
+ * Automatically switches between filter and search queries based on input
  *
- * @returns Issues list with loading state, errors, and pagination
+ * @param filterOption - Filter by issue state
+ * @param searchQuery - Search term for filtering issues
+ * @returns Issues list with loading state, errors, and pagination handlers
  */
 export const useRepositoryIssues = (filterOption: IssueFilterOption, searchQuery: string) => {
     const hasSearchQuery = searchQuery.trim().length > 0;
 
     const githubSearchQuery = useMemo(() => {
         if (!hasSearchQuery) return '';
-
         return buildGitHubSearchQuery({
             owner: GITHUB_CONFIG.owner,
             repo: GITHUB_CONFIG.repo,
@@ -28,61 +29,55 @@ export const useRepositoryIssues = (filterOption: IssueFilterOption, searchQuery
         });
     }, [hasSearchQuery, filterOption, searchQuery]);
 
-    const repoQuery = useFilterIssuesQuery(filterOption, hasSearchQuery);
-    const searchQuery_ = useSearchIssuesQuery(githubSearchQuery, !hasSearchQuery);
+    const {
+        data: repoData,
+        loading: repoLoading,
+        error: repoError,
+        fetchMore: repoFetchMore,
+    } = useFilterIssuesQuery(filterOption, hasSearchQuery);
+    const {
+        data: searchData,
+        loading: searchLoading,
+        error: searchError,
+        fetchMore: searchFetchMore,
+    } = useSearchIssuesQuery(githubSearchQuery, !hasSearchQuery);
 
-    const { data: repoData, loading: repoLoading, error: repoError, fetchMore: repoFetchMore } = repoQuery;
-    const { data: searchData, loading: searchLoading, error: searchError, fetchMore: searchFetchMore } = searchQuery_;
-
-    const issues = useMemo<IssueListItem[]>(() => {
+    const issues: IssueListItem[] = useMemo<IssueListItem[]>(() => {
         if (hasSearchQuery) {
-            return (
-                searchData?.search?.edges
-                    ?.filter(
-                        (edge): edge is SearchResultItemEdge & { node: { __typename: 'Issue' } } =>
-                            edge?.node?.__typename === 'Issue',
-                    )
-                    ?.map((edge) => mapToIssueListItem(edge.node as any))
-                    .filter((issue): issue is IssueListItem => issue !== null && issue !== undefined) || []
-            );
+            const searchEdges = searchData?.search?.edges || [];
+            return searchEdges
+                .filter((edge: any) => edge?.node && hasTypename(edge.node, 'Issue'))
+                .map((edge: any) => mapToIssueListItem(edge.node))
+                .filter(isNonNull);
         } else {
-            return (
-                repoData?.repository?.issues?.edges
-                    ?.filter(
-                        (edge): edge is IssueEdge & { node: NonNullable<IssueEdge['node']> } =>
-                            edge?.node !== null && edge?.node !== undefined,
-                    )
-                    ?.map((edge) => mapToIssueListItem(edge.node as any))
-                    .filter((issue): issue is IssueListItem => issue !== null && issue !== undefined) || []
-            );
+            const issueNodes = extractEdges(repoData?.repository?.issues?.edges as any);
+            return issueNodes.map((node: any) => mapToIssueListItem(node)).filter(isNonNull);
         }
     }, [hasSearchQuery, searchData?.search?.edges, repoData?.repository?.issues?.edges]);
 
-    const pageInfo = hasSearchQuery ? searchData?.search?.pageInfo : repoData?.repository?.issues?.pageInfo;
+    const pageInfo = hasSearchQuery
+        ? extractPageInfo(searchData?.search)
+        : extractPageInfo(repoData?.repository?.issues);
 
-    const handleLoadMore = () => {
+    const handleLoadMore = useCallback(() => {
         if (!pageInfo?.hasNextPage) return;
 
         if (hasSearchQuery) {
             searchFetchMore({
                 variables: {
                     query: githubSearchQuery,
-                    type: 'ISSUE',
+                    type: 'ISSUE' as const,
                     after: pageInfo.endCursor,
                 },
-            }).catch((err) => {
-                console.error('Failed to load more search results:', err);
             });
         } else {
             repoFetchMore({
                 variables: {
                     after: pageInfo.endCursor,
                 },
-            }).catch((err) => {
-                console.error('Failed to load more issues:', err);
             });
         }
-    };
+    }, [hasSearchQuery, pageInfo, searchFetchMore, repoFetchMore, githubSearchQuery]);
 
     return {
         issues,

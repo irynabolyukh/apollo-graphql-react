@@ -1,9 +1,6 @@
 import { gql } from '@apollo/client';
-import { AUTHOR_FRAGMENT } from '@/entities/issue/api/fragments';
+import { AUTHOR_FRAGMENT } from '@/entities/common/api/fragments.ts';
 
-/**
- * Comment fragment with all fields
- */
 export const COMMENT_FRAGMENT = gql`
     ${AUTHOR_FRAGMENT}
 
@@ -18,4 +15,3 @@ export const COMMENT_FRAGMENT = gql`
         }
     }
 `;
-

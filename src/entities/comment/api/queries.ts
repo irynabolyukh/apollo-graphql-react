@@ -3,7 +3,6 @@ import { COMMENT_FRAGMENT } from './fragments';
 
 /**
  * Query to fetch comments for a specific issue with pagination
- * Comments are sorted by most recent first
  */
 export const GET_ISSUE_COMMENTS = gql`
     ${COMMENT_FRAGMENT}
@@ -38,4 +37,3 @@ export const GET_ISSUE_COMMENTS = gql`
         }
     }
 `;
-

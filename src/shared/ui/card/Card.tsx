@@ -15,6 +15,7 @@ export const Card = styled.div`
 
 export const CardLarge = styled(Card)`
     padding: ${spacing.xl};
+    margin-bottom: ${spacing.lg};
 
     ${mediaMax.tablet} {
         padding: ${spacing.md};

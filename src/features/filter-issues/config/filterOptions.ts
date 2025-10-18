@@ -1,4 +1,4 @@
-import { ISSUE_FILTER_OPTIONS, ISSUE_FILTER_LABELS } from '@/app/config/constants';
+import { ISSUE_FILTER_OPTIONS, ISSUE_FILTER_LABELS } from '@/app/config';
 import type { FilterOption } from '../ui/status-filter';
 
 export const ISSUE_STATUS_FILTER_OPTIONS: FilterOption[] = [

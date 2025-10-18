@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { AUTHOR_FRAGMENT, LABEL_FRAGMENT } from '@/entities/common/api/fragments.ts';
 
 /**
  * Core issue fields used across all issue queries
@@ -12,28 +13,6 @@ export const ISSUE_CORE_FRAGMENT = gql`
         createdAt
         updatedAt
         url
-    }
-`;
-
-/**
- * Author information fragment
- */
-export const AUTHOR_FRAGMENT = gql`
-    fragment Author on Actor {
-        login
-        avatarUrl
-        url
-    }
-`;
-
-/**
- * Label information fragment
- */
-export const LABEL_FRAGMENT = gql`
-    fragment Label on Label {
-        id
-        name
-        color
     }
 `;
 
@@ -66,7 +45,7 @@ export const ISSUE_LIST_ITEM_FRAGMENT = gql`
 `;
 
 /**
- * Issue detail fragment - for full issue view (without comments - fetch separately)
+ * Issue detail fragment - for full issue view
  */
 export const ISSUE_DETAIL_FRAGMENT = gql`
     ${ISSUE_CORE_FRAGMENT}
@@ -86,10 +65,8 @@ export const ISSUE_DETAIL_FRAGMENT = gql`
                     id
                     name
                     color
-                    description
                 }
             }
         }
     }
 `;
-

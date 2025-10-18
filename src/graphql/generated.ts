@@ -35681,8 +35681,6 @@ export type GetIssueCommentsQuery = { __typename?: 'Query', repository?: { __typ
               | { __typename?: 'User', login: string, avatarUrl: string, url: string }
              | null | undefined } | null | undefined } | null | undefined> | null | undefined } } | null | undefined } | null | undefined };
 
-export type IssueCoreFragment = { __typename?: 'Issue', id: string, number: number, title: string, state: IssueState, createdAt: string, updatedAt: string, url: string };
-
 type Author_Bot_Fragment = { __typename?: 'Bot', login: string, avatarUrl: string, url: string };
 
 type Author_EnterpriseUserAccount_Fragment = { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: string, url: string };
@@ -35703,6 +35701,8 @@ export type AuthorFragment =
 
 export type LabelFragment = { __typename?: 'Label', id: string, name: string, color: string };
 
+export type IssueCoreFragment = { __typename?: 'Issue', id: string, number: number, title: string, state: IssueState, createdAt: string, updatedAt: string, url: string };
+
 export type IssueListItemFragment = { __typename?: 'Issue', closedAt?: string | null | undefined, bodyText: string, id: string, number: number, title: string, state: IssueState, createdAt: string, updatedAt: string, url: string, author?:
     | { __typename?: 'Bot', login: string, avatarUrl: string, url: string }
     | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: string, url: string }
@@ -35717,7 +35717,7 @@ export type IssueDetailFragment = { __typename?: 'Issue', closedAt?: string | nu
     | { __typename?: 'Mannequin', login: string, avatarUrl: string, url: string }
     | { __typename?: 'Organization', login: string, avatarUrl: string, url: string }
     | { __typename?: 'User', login: string, avatarUrl: string, url: string }
-   | null | undefined, labels?: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string, color: string, description?: string | null | undefined } | null | undefined } | null | undefined> | null | undefined } | null | undefined };
+   | null | undefined, labels?: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string, color: string } | null | undefined } | null | undefined> | null | undefined } | null | undefined };
 
 export type GetRepositoryIssuesQueryVariables = Exact<{
   owner: Scalars['String']['input'];
@@ -35730,10 +35730,7 @@ export type GetRepositoryIssuesQueryVariables = Exact<{
 }>;
 
 
-export type GetRepositoryIssuesQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', id: string, name: string, owner:
-      | { __typename?: 'Organization', login: string }
-      | { __typename?: 'User', login: string }
-    , issues: { __typename?: 'IssueConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null | undefined, endCursor?: string | null | undefined }, edges?: Array<{ __typename?: 'IssueEdge', cursor: string, node?: { __typename?: 'Issue', closedAt?: string | null | undefined, bodyText: string, id: string, number: number, title: string, state: IssueState, createdAt: string, updatedAt: string, url: string, author?:
+export type GetRepositoryIssuesQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', id: string, issues: { __typename?: 'IssueConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null | undefined, endCursor?: string | null | undefined }, edges?: Array<{ __typename?: 'IssueEdge', cursor: string, node?: { __typename?: 'Issue', closedAt?: string | null | undefined, bodyText: string, id: string, number: number, title: string, state: IssueState, createdAt: string, updatedAt: string, url: string, author?:
             | { __typename?: 'Bot', login: string, avatarUrl: string, url: string }
             | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: string, url: string }
             | { __typename?: 'Mannequin', login: string, avatarUrl: string, url: string }
@@ -35750,7 +35747,7 @@ export type GetIssueDetailsQueryVariables = Exact<{
 }>;
 
 
-export type GetIssueDetailsQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', id: string, name: string, issue?: { __typename?: 'Issue', closedAt?: string | null | undefined, body: string, bodyHTML: string, id: string, number: number, title: string, state: IssueState, createdAt: string, updatedAt: string, url: string, comments: { __typename?: 'IssueCommentConnection', totalCount: number, edges?: Array<{ __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, bodyHTML: string, createdAt: string, updatedAt: string, author?:
+export type GetIssueDetailsQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', id: string, issue?: { __typename?: 'Issue', closedAt?: string | null | undefined, body: string, bodyHTML: string, id: string, number: number, title: string, state: IssueState, createdAt: string, updatedAt: string, url: string, comments: { __typename?: 'IssueCommentConnection', totalCount: number, edges?: Array<{ __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, bodyHTML: string, createdAt: string, updatedAt: string, author?:
               | { __typename?: 'Bot', login: string, avatarUrl: string, url: string }
               | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: string, url: string }
               | { __typename?: 'Mannequin', login: string, avatarUrl: string, url: string }
@@ -35762,7 +35759,7 @@ export type GetIssueDetailsQuery = { __typename?: 'Query', repository?: { __type
         | { __typename?: 'Mannequin', login: string, avatarUrl: string, url: string }
         | { __typename?: 'Organization', login: string, avatarUrl: string, url: string }
         | { __typename?: 'User', login: string, avatarUrl: string, url: string }
-       | null | undefined, labels?: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string, color: string, description?: string | null | undefined } | null | undefined } | null | undefined> | null | undefined } | null | undefined } | null | undefined } | null | undefined };
+       | null | undefined, labels?: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string, color: string } | null | undefined } | null | undefined> | null | undefined } | null | undefined } | null | undefined } | null | undefined };
 
 export type SearchIssuesQueryVariables = Exact<{
   query: Scalars['String']['input'];

@@ -16,12 +16,10 @@ export const router = createBrowserRouter([
             {
                 path: ROUTES.HOME,
                 element: <IssuesListPage />,
-                errorElement: <ErrorPage />,
             },
             {
                 path: ROUTES.ISSUE_DETAILS,
                 element: <IssueDetailPage />,
-                errorElement: <ErrorPage />,
             },
             {
                 path: ROUTES.NOT_FOUND,

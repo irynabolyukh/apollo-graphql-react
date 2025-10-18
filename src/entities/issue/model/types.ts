@@ -1,4 +1,7 @@
 import type { GetRepositoryIssuesQuery, GetIssueDetailsQuery } from '@/graphql/generated';
+import { mapCoreIssueFields, mapAuthor, mapLabels } from '@/entities/common/mappers';
+import type { Author, Label } from '@/entities/common/models';
+import { extractTotalCount } from '@/shared/lib/apollo/apollo-helpers.ts';
 
 type IssueEdge = NonNullable<NonNullable<GetRepositoryIssuesQuery['repository']>['issues']['edges']>[number];
 
@@ -15,16 +18,8 @@ export interface IssueListItem {
     updatedAt: string;
     url: string;
     bodyText: string;
-    author: {
-        login: string;
-        avatarUrl: string;
-        url: string;
-    } | null;
-    labels: Array<{
-        id: string;
-        name: string;
-        color: string;
-    }>;
+    author: Author | null;
+    labels: Array<Label>;
     commentsCount: number;
 }
 
@@ -39,17 +34,8 @@ export interface IssueDetail {
     url: string;
     body: string;
     bodyHTML: string;
-    author: {
-        login: string;
-        avatarUrl: string;
-        url: string;
-    } | null;
-    labels: Array<{
-        id: string;
-        name: string;
-        color: string;
-        description: string | null;
-    }>;
+    author: Author | null;
+    labels: Array<Label>;
     commentsCount: number;
 }
 
@@ -66,57 +52,22 @@ export function isValidIssueState(state: string): state is IssueState {
 
 export function mapToIssueListItem(node: IssueNode): IssueListItem {
     return {
-        id: node.id,
-        number: node.number,
-        title: node.title,
-        state: node.state as IssueState,
-        createdAt: node.createdAt as string,
-        updatedAt: node.updatedAt as string,
-        url: node.url as string,
+        ...mapCoreIssueFields(node),
         bodyText: node.bodyText || '',
-        author: node.author && node.author.login
-            ? {
-                  login: node.author.login,
-                  avatarUrl: node.author.avatarUrl as string,
-                  url: node.author.url as string,
-              }
-            : null,
-        labels:
-            node.labels?.edges?.map((edge) => ({
-                id: edge?.node?.id || '',
-                name: edge?.node?.name || '',
-                color: edge?.node?.color || '',
-            })) || [],
-        commentsCount: node.comments?.totalCount ?? 0,
+        author: mapAuthor(node.author),
+        labels: mapLabels(node.labels),
+        commentsCount: extractTotalCount(node.comments),
     };
 }
 
 export function mapToIssueDetail(issue: IssueDetailsNode): IssueDetail {
     return {
-        id: issue.id,
-        number: issue.number,
-        title: issue.title,
-        state: issue.state as IssueState,
-        createdAt: issue.createdAt as string,
-        updatedAt: issue.updatedAt as string,
+        ...mapCoreIssueFields(issue),
         closedAt: (issue.closedAt as string) || null,
-        url: issue.url as string,
         body: issue.body || '',
         bodyHTML: issue.bodyHTML as string,
-        author: issue.author && issue.author.login
-            ? {
-                  login: issue.author.login,
-                  avatarUrl: issue.author.avatarUrl as string,
-                  url: issue.author.url as string,
-              }
-            : null,
-        labels:
-            issue.labels?.edges?.map((edge) => ({
-                id: edge?.node?.id || '',
-                name: edge?.node?.name || '',
-                color: edge?.node?.color || '',
-                description: edge?.node?.description || null,
-            })) || [],
-        commentsCount: issue.comments?.totalCount ?? 0,
+        author: mapAuthor(issue.author),
+        labels: mapLabels(issue.labels),
+        commentsCount: extractTotalCount(issue.comments),
     };
 }

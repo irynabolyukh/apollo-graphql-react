@@ -46,7 +46,6 @@ const IssueDetails = ({ issue }: IssueDetailsProps) => {
                             <LabelBadge
                                 key={label.id}
                                 $color={label.color}
-                                title={label.description || undefined}
                             >
                                 {label.name}
                             </LabelBadge>

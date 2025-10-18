@@ -1,11 +1,6 @@
 import { gql } from '@apollo/client';
-import {
-    ISSUE_LIST_ITEM_FRAGMENT,
-    ISSUE_DETAIL_FRAGMENT,
-    AUTHOR_FRAGMENT,
-    ISSUE_CORE_FRAGMENT,
-    LABEL_FRAGMENT,
-} from './fragments';
+import { ISSUE_LIST_ITEM_FRAGMENT, ISSUE_DETAIL_FRAGMENT, ISSUE_CORE_FRAGMENT } from './fragments';
+import { AUTHOR_FRAGMENT, LABEL_FRAGMENT } from '@/entities/common/api/fragments.ts';
 
 /**
  * Query to fetch a list of issues from a repository
@@ -24,10 +19,6 @@ export const GET_REPOSITORY_ISSUES = gql`
     ) {
         repository(owner: $owner, name: $repo) {
             id
-            name
-            owner {
-                login
-            }
             issues(first: $first, after: $after, states: $states, orderBy: $orderBy, filterBy: $filterBy) {
                 totalCount
                 pageInfo {
@@ -63,7 +54,6 @@ export const GET_ISSUE_DETAILS = gql`
     ) {
         repository(owner: $owner, name: $repo) {
             id
-            name
             issue(number: $number) {
                 ...IssueDetail
                 comments(first: $commentsAmount, orderBy: $commentsOrderBy) {
@@ -89,7 +79,7 @@ export const GET_ISSUE_DETAILS = gql`
 /**
  * Query to search for issues within a specific repository
  * Note: GitHub's repository.issues doesn't support text search,
- * so use the Search API with repo: qualifier to restrict to one repo
+ * so we use the GitHub Search API
  */
 export const SEARCH_ISSUES = gql`
     ${ISSUE_CORE_FRAGMENT}

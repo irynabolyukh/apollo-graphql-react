@@ -1,6 +1,5 @@
-import type { IssueFilterOption } from '@/app/config/constants';
-import { ISSUE_FILTER_OPTIONS } from '@/app/config/constants';
-import type { GitHubSearchType, GitHubSearchSort } from '@/shared/lib/github-api/types';
+import type { IssueFilterOption, GitHubSearchType, GitHubSearchSort } from '@/app/config';
+import { ISSUE_FILTER_OPTIONS } from '@/app/config';
 
 export interface GitHubSearchQueryOptions {
     owner: string;

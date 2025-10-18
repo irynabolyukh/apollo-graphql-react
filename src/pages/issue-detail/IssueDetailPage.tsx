@@ -31,7 +31,7 @@ export const IssueDetailPage = () => {
         return (
             <ErrorMessage
                 title="Error Loading Issue"
-                message={error.message}
+                error={error}
                 onRetry={() => window.location.reload()}
             />
         );
@@ -58,7 +58,7 @@ export const IssueDetailPage = () => {
             <IssueDetails issue={issue} />
 
             {comments.length > 0 && (
-                <div style={{ marginTop: spacing.xl }}>
+                <>
                     <CommentsTitle>Comments ({comments.length})</CommentsTitle>
                     <CommentsList>
                         {comments.map((comment) => (
@@ -68,7 +68,7 @@ export const IssueDetailPage = () => {
                             />
                         ))}
                     </CommentsList>
-                </div>
+                </>
             )}
         </>
     );

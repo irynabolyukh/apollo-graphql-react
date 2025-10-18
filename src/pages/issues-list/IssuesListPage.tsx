@@ -6,8 +6,8 @@ import { SearchInput } from '@/features/search-issues/ui/search-input';
 import { StatusFilter } from '@/features/filter-issues/ui/status-filter';
 import Loading from '@/shared/ui/loading';
 import Button from '@/shared/ui/button';
+import ErrorMessage from '@/shared/ui/error-message';
 import { Filters, IssuesList, EmptyState, LoadMoreContainer } from './IssuesListPage.styles';
-import { ErrorMessage } from '@/shared/ui/error-message';
 
 export const IssuesListPage = () => {
     const { filterOption, resetFilters, setFilterOption, searchQuery, debouncedSearchQuery, setSearchQuery } =
@@ -21,7 +21,7 @@ export const IssuesListPage = () => {
         return (
             <ErrorMessage
                 title="Error Loading Issues"
-                message={error.message}
+                error={error}
                 onRetry={() => window.location.reload()}
             />
         );

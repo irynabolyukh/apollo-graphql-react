@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { sanitizeHtml } from './sanitize.ts';
 import { formatDate } from './formatDate.ts';
 import { buildGitHubSearchQuery } from '@/shared/lib/utils/buildGitHubSearchQuery.ts';
+
 describe('utils', () => {
     describe('formatDate', () => {
         beforeEach(() => {

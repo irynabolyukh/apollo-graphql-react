@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
 import { useQuery } from '@apollo/client/react';
-import { COMMENTS_AMOUNT, DEFAULT_SORT, GITHUB_CONFIG } from '@/app/config/constants.ts';
+import { COMMENTS_AMOUNT, DEFAULT_SORT, GITHUB_CONFIG } from '@/app/config';
 import { GET_ISSUE_DETAILS } from '@/entities/issue/api';
 import type { GetIssueDetailsQuery, GetIssueDetailsQueryVariables } from '@/graphql/generated.ts';
 import { type IssueDetail, mapToIssueDetail } from '@/entities/issue/model';
 import { mapToComment, type Comment } from '@/entities/comment/model';
+import { mapEdges } from '@/shared/lib/apollo/apollo-helpers';
 
 /**
  * Hook for fetching repository issue details with comments
@@ -29,7 +30,7 @@ export const useIssueDetails = (number: string) => {
 
     const comments = useMemo<Comment[]>(() => {
         if (!issueData?.comments?.edges) return [];
-        return issueData.comments.edges.map((edge: any) => edge.node && mapToComment(edge.node)).filter(Boolean) || [];
+        return mapEdges(issueData.comments.edges, mapToComment);
     }, [issueData?.comments?.edges]);
 
     return {

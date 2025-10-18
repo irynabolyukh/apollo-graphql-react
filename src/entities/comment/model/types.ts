@@ -1,4 +1,6 @@
 import type { GetIssueDetailsQuery } from '@/graphql/generated';
+import { mapAuthor } from '@/entities/common/mappers';
+import type { Author } from '@/entities/common/models';
 
 type CommentEdge = NonNullable<
     NonNullable<NonNullable<GetIssueDetailsQuery['repository']>['issue']>['comments']['edges']
@@ -12,11 +14,7 @@ export interface Comment {
     bodyHTML: string;
     createdAt: string;
     updatedAt: string;
-    author: {
-        login: string;
-        avatarUrl: string;
-        url: string;
-    } | null;
+    author: Author | null;
 }
 
 export function mapToComment(node: CommentNode): Comment {
@@ -26,12 +24,6 @@ export function mapToComment(node: CommentNode): Comment {
         bodyHTML: node.bodyHTML as string,
         createdAt: node.createdAt as string,
         updatedAt: node.updatedAt as string,
-        author: node.author && node.author.login
-            ? {
-                  login: node.author.login,
-                  avatarUrl: node.author.avatarUrl as string,
-                  url: node.author.url as string,
-              }
-            : null,
+        author: mapAuthor(node.author),
     };
 }

@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/client/react';
-import { apolloClient } from '@/shared/lib/apollo/apolloClient';
+import { apolloClient } from '@/app/config/apolloClient.ts';
 import { RouterProvider as ReactRouterProvider } from 'react-router-dom';
 import { router } from '@/routes/router.tsx';
 import { ResetStyles } from '@/shared/styles';

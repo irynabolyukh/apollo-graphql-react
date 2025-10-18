@@ -1,3 +1,8 @@
+export const GITHUB_CONFIG = {
+    owner: import.meta.env.VITE_GITHUB_OWNER || 'facebook',
+    repo: import.meta.env.VITE_GITHUB_REPO || 'react',
+} as const;
+
 export type GitHubSearchType = 'issue' | 'pr';
 
 export type GitHubSearchSort =

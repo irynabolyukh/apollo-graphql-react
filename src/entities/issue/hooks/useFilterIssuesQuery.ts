@@ -1,12 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import { GET_REPOSITORY_ISSUES } from '../api/queries.ts';
-import {
-    GITHUB_CONFIG,
-    PAGINATION,
-    DEFAULT_SORT,
-    type IssueFilterOption,
-    ISSUE_FILTER_OPTIONS,
-} from '@/app/config/constants.ts';
+import { GITHUB_CONFIG, PAGINATION, DEFAULT_SORT, type IssueFilterOption, ISSUE_FILTER_OPTIONS } from '@/app/config';
 import type { GetRepositoryIssuesQuery, GetRepositoryIssuesQueryVariables } from '@/graphql/generated.ts';
 
 /**
