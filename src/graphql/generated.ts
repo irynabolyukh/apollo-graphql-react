@@ -35746,6 +35746,7 @@ export type GetIssueDetailsQueryVariables = Exact<{
   repo: Scalars['String']['input'];
   number: Scalars['Int']['input'];
   commentsOrderBy?: InputMaybe<IssueCommentOrder>;
+  commentsAmount: Scalars['Int']['input'];
 }>;
 
 
@@ -35774,10 +35775,7 @@ export type SearchIssuesQueryVariables = Exact<{
 export type SearchIssuesQuery = { __typename?: 'Query', search: { __typename?: 'SearchResultItemConnection', issueCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null | undefined, endCursor?: string | null | undefined }, edges?: Array<{ __typename?: 'SearchResultItemEdge', cursor: string, node?:
         | { __typename?: 'App' }
         | { __typename?: 'Discussion' }
-        | { __typename?: 'Issue', closedAt?: string | null | undefined, bodyText: string, id: string, number: number, title: string, state: IssueState, createdAt: string, updatedAt: string, url: string, repository: { __typename?: 'Repository', name: string, owner:
-              | { __typename?: 'Organization', login: string }
-              | { __typename?: 'User', login: string }
-             }, author?:
+        | { __typename?: 'Issue', closedAt?: string | null | undefined, bodyText: string, id: string, number: number, title: string, state: IssueState, createdAt: string, updatedAt: string, url: string, author?:
             | { __typename?: 'Bot', login: string, avatarUrl: string, url: string }
             | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: string, url: string }
             | { __typename?: 'Mannequin', login: string, avatarUrl: string, url: string }

@@ -1,5 +1,11 @@
 import { gql } from '@apollo/client';
-import { ISSUE_LIST_ITEM_FRAGMENT, ISSUE_DETAIL_FRAGMENT, AUTHOR_FRAGMENT } from './fragments';
+import {
+    ISSUE_LIST_ITEM_FRAGMENT,
+    ISSUE_DETAIL_FRAGMENT,
+    AUTHOR_FRAGMENT,
+    ISSUE_CORE_FRAGMENT,
+    LABEL_FRAGMENT,
+} from './fragments';
 
 /**
  * Query to fetch a list of issues from a repository
@@ -22,13 +28,7 @@ export const GET_REPOSITORY_ISSUES = gql`
             owner {
                 login
             }
-            issues(
-                first: $first
-                after: $after
-                states: $states
-                orderBy: $orderBy
-                filterBy: $filterBy
-            ) {
+            issues(first: $first, after: $after, states: $states, orderBy: $orderBy, filterBy: $filterBy) {
                 totalCount
                 pageInfo {
                     hasNextPage
@@ -48,7 +48,7 @@ export const GET_REPOSITORY_ISSUES = gql`
 `;
 
 /**
- * Query to fetch a single issue with full details and comments
+ * Query to fetch a single issue with full details and first comments
  */
 export const GET_ISSUE_DETAILS = gql`
     ${ISSUE_DETAIL_FRAGMENT}
@@ -59,13 +59,14 @@ export const GET_ISSUE_DETAILS = gql`
         $repo: String!
         $number: Int!
         $commentsOrderBy: IssueCommentOrder
+        $commentsAmount: Int!
     ) {
         repository(owner: $owner, name: $repo) {
             id
             name
             issue(number: $number) {
                 ...IssueDetail
-                comments(first: 50, orderBy: $commentsOrderBy) {
+                comments(first: $commentsAmount, orderBy: $commentsOrderBy) {
                     totalCount
                     edges {
                         node {
@@ -86,10 +87,14 @@ export const GET_ISSUE_DETAILS = gql`
 `;
 
 /**
- * Query to search for issues across repositories
+ * Query to search for issues within a specific repository
+ * Note: GitHub's repository.issues doesn't support text search,
+ * so use the Search API with repo: qualifier to restrict to one repo
  */
 export const SEARCH_ISSUES = gql`
-    ${ISSUE_LIST_ITEM_FRAGMENT}
+    ${ISSUE_CORE_FRAGMENT}
+    ${AUTHOR_FRAGMENT}
+    ${LABEL_FRAGMENT}
 
     query SearchIssues($query: String!, $type: SearchType!, $first: Int!, $after: String) {
         search(query: $query, type: $type, first: $first, after: $after) {
@@ -104,12 +109,21 @@ export const SEARCH_ISSUES = gql`
                 cursor
                 node {
                     ... on Issue {
-                        ...IssueListItem
-                        repository {
-                            name
-                            owner {
-                                login
+                        ...IssueCore
+                        closedAt
+                        bodyText
+                        author {
+                            ...Author
+                        }
+                        labels(first: 10) {
+                            edges {
+                                node {
+                                    ...Label
+                                }
                             }
+                        }
+                        comments {
+                            totalCount
                         }
                     }
                 }
@@ -117,4 +131,3 @@ export const SEARCH_ISSUES = gql`
         }
     }
 `;
-

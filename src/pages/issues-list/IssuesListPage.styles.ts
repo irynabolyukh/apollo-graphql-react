@@ -61,7 +61,6 @@ export const EmptyState = styled.div`
     padding: ${spacing.xxl};
     color: ${colors.text.secondary};
 `;
-
 export const LoadMoreContainer = styled.div`
     margin-top: ${spacing.lg};
     text-align: center;
@@ -71,3 +70,4 @@ export const Subtitle = styled.p`
     color: ${colors.text.secondary};
     font-size: ${fontSizes.sm};
 `;
+

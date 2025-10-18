@@ -1,2 +1,2 @@
-export { CommentCard } from './comment-card';
+export { default as CommentCard } from './comment-card';
 

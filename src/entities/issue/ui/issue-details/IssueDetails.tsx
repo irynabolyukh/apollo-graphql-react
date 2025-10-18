@@ -5,7 +5,6 @@ import Link from '@/shared/ui/link';
 import { IssueBadge, LabelBadge } from '@/shared/ui/badge';
 import HtmlContent from '@/shared/ui/html-content';
 import {
-    Header,
     TitleRow,
     Title,
     IssueNumber,
@@ -16,18 +15,18 @@ import {
     AuthorName,
     Metadata,
     Separator,
-    Body,
     Footer,
 } from './IssueDetails.styles';
+import { spacing } from '@/shared/styles';
 
 interface IssueDetailsProps {
     issue: IssueDetail;
 }
 
-export const IssueDetails = ({ issue }: IssueDetailsProps) => {
+const IssueDetails = ({ issue }: IssueDetailsProps) => {
     return (
         <CardLarge>
-            <Header>
+            <div style={{ marginBottom: spacing.lg }}>
                 <TitleRow>
                     <IssueBadge
                         $state={issue.state}
@@ -84,11 +83,11 @@ export const IssueDetails = ({ issue }: IssueDetailsProps) => {
                         </Metadata>
                     </AuthorInfo>
                 </AuthorSection>
-            </Header>
+            </div>
 
-            <Body>
+            <div style={{ marginBottom: spacing.xl }}>
                 <HtmlContent html={issue.bodyHTML} />
-            </Body>
+            </div>
 
             <Footer>
                 <Link
@@ -101,3 +100,5 @@ export const IssueDetails = ({ issue }: IssueDetailsProps) => {
         </CardLarge>
     );
 };
+
+export default IssueDetails;

@@ -1,2 +1,1 @@
-export { IssueDetails } from './IssueDetails';
-
+export { default } from './IssueDetails';

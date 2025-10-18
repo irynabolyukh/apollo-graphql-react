@@ -1,3 +1,3 @@
-export { IssueCard } from './issue-card';
-export { IssueDetails } from './issue-details';
+export { default as IssueCard } from './issue-card';
+export { default as IssueDetails } from './issue-details';
 

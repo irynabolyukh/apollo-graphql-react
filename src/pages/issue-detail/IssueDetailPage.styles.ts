@@ -1,14 +1,6 @@
 import styled from 'styled-components';
 import { colors, fontSizes, fontWeights, spacing, flexColumn } from '@/shared/styles';
 
-export const BackButtonContainer = styled.div`
-    margin-bottom: ${spacing.lg};
-`;
-
-export const CommentsSection = styled.div`
-    margin-top: ${spacing.xl};
-`;
-
 export const CommentsTitle = styled.h2`
     margin-bottom: ${spacing.md};
     font-size: ${fontSizes.lg};
@@ -19,4 +11,3 @@ export const CommentsTitle = styled.h2`
 export const CommentsList = styled.div`
     ${flexColumn(spacing.md)}
 `;
-

@@ -87,7 +87,7 @@ export function mapToIssueListItem(node: IssueNode): IssueListItem {
                 name: edge?.node?.name || '',
                 color: edge?.node?.color || '',
             })) || [],
-        commentsCount: node.comments.totalCount,
+        commentsCount: node.comments?.totalCount ?? 0,
     };
 }
 
@@ -117,6 +117,6 @@ export function mapToIssueDetail(issue: IssueDetailsNode): IssueDetail {
                 color: edge?.node?.color || '',
                 description: edge?.node?.description || null,
             })) || [],
-        commentsCount: issue.comments.totalCount,
+        commentsCount: issue.comments?.totalCount ?? 0,
     };
 }

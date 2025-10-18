@@ -19,6 +19,22 @@ export const apolloClient = new ApolloClient({
             Actor: ['Bot', 'EnterpriseUserAccount', 'Mannequin', 'Organization', 'User'],
         },
         typePolicies: {
+            Query: {
+                fields: {
+                    search: {
+                        keyArgs: ['query', 'type'], // Cache by search query and type
+                        merge(existing, incoming, { args }) {
+                            if (!existing) return incoming;
+                            if (!args?.after) return incoming; // New search, replace results
+
+                            return {
+                                ...incoming,
+                                edges: [...(existing.edges || []), ...(incoming.edges || [])],
+                            };
+                        },
+                    },
+                },
+            },
             Repository: {
                 fields: {
                     issues: {

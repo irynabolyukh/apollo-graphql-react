@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { colors, fontSizes, fontWeights, spacing, flexRow, circularAvatar } from '@/shared/styles';
 
-export const Header = styled.div`
+export const TopContent = styled.div`
     ${flexRow(spacing.xs)}
     margin-bottom: ${spacing.sm};
 `;

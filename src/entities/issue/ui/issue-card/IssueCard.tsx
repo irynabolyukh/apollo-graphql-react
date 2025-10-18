@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { IssueListItem } from '@/entities/issue/model/types';
 import { PATHS } from '@/routes/constants';
 import { formatDate } from '@/shared/lib/utils';
@@ -19,7 +20,7 @@ interface IssueCardProps {
     issue: IssueListItem;
 }
 
-export const IssueCard = ({ issue }: IssueCardProps) => {
+const IssueCard = ({ issue }: IssueCardProps) => {
     return (
         <Card>
             <CardContent>
@@ -59,3 +60,5 @@ export const IssueCard = ({ issue }: IssueCardProps) => {
         </Card>
     );
 };
+
+export default memo(IssueCard);

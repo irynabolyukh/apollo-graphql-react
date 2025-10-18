@@ -1,97 +1,60 @@
-import { useState } from 'react';
-import { useQuery } from '@apollo/client/react';
-import {
-    GITHUB_CONFIG,
-    PAGINATION,
-    ISSUE_FILTER_OPTIONS,
-    DEFAULT_SORT,
-    type IssueFilterOption,
-} from '@/app/config/constants';
-import { GET_REPOSITORY_ISSUES } from '@/entities/issue/api';
-import { mapToIssueListItem, type IssueListItem } from '@/entities/issue/model';
 import { IssueCard } from '@/entities/issue/ui';
-import type { GetRepositoryIssuesQuery, GetRepositoryIssuesQueryVariables } from '@/graphql/generated';
+import { useRepositoryIssues } from '@/entities/issue/hooks';
+import { useIssueFilters } from '@/features/filter-issues/hooks';
+import { ISSUE_STATUS_FILTER_OPTIONS } from '@/features/filter-issues/config';
+import { SearchInput } from '@/features/search-issues/ui/search-input';
+import { StatusFilter } from '@/features/filter-issues/ui/status-filter';
 import Loading from '@/shared/ui/loading';
 import Button from '@/shared/ui/button';
-import { Filters, Select, SearchInput, IssuesList, EmptyState, LoadMoreContainer } from './IssuesListPage.styles';
+import { Filters, IssuesList, EmptyState, LoadMoreContainer } from './IssuesListPage.styles';
+import { ErrorMessage } from '@/shared/ui/error-message';
 
 export const IssuesListPage = () => {
-    const [filterOption, setFilterOption] = useState<IssueFilterOption>('OPEN');
-    const [searchQuery, setSearchQuery] = useState('');
-
-    const { data, loading, error, fetchMore } = useQuery<GetRepositoryIssuesQuery, GetRepositoryIssuesQueryVariables>(
-        GET_REPOSITORY_ISSUES,
-        {
-            variables: {
-                owner: GITHUB_CONFIG.owner,
-                repo: GITHUB_CONFIG.repo,
-                first: PAGINATION.DEFAULT_PAGE_SIZE,
-                states: filterOption === 'ALL' ? null : [filterOption],
-                orderBy: DEFAULT_SORT.ISSUES,
-            },
-        },
+    const { filterOption, resetFilters, setFilterOption, searchQuery, debouncedSearchQuery, setSearchQuery } =
+        useIssueFilters();
+    const { issues, loading, error, pageInfo, handleLoadMore, isSearching } = useRepositoryIssues(
+        filterOption,
+        debouncedSearchQuery,
     );
 
     if (error) {
         return (
-            <div style={{ padding: '20px', color: 'red' }}>
-                <h2>Error loading issues</h2>
-                <p>{error.message}</p>
-            </div>
+            <ErrorMessage
+                title="Error Loading Issues"
+                message={error.message}
+                onRetry={() => window.location.reload()}
+            />
         );
     }
-
-    const issues: IssueListItem[] =
-        data?.repository?.issues?.edges
-            ?.map((edge: any) => edge.node && mapToIssueListItem(edge.node))
-            .filter((issue): issue is IssueListItem => issue !== null && issue !== undefined) || [];
-
-    const pageInfo = data?.repository?.issues?.pageInfo;
-
-    const filteredIssues = issues.filter((issue) => {
-        if (!searchQuery) return true;
-        return (
-            issue.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            issue.bodyText.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-    });
-
-    const handleLoadMore = () => {
-        if (pageInfo?.hasNextPage) {
-            fetchMore({
-                variables: {
-                    after: pageInfo.endCursor,
-                },
-            });
-        }
-    };
 
     return (
         <>
             <Filters>
-                <Select
+                <StatusFilter
                     value={filterOption}
-                    onChange={(e) => setFilterOption(e.target.value as IssueFilterOption)}
-                >
-                    <option value={ISSUE_FILTER_OPTIONS.OPEN}>Open</option>
-                    <option value={ISSUE_FILTER_OPTIONS.CLOSED}>Closed</option>
-                    <option value={ISSUE_FILTER_OPTIONS.ALL}>All</option>
-                </Select>
-
-                <SearchInput
-                    type="text"
-                    placeholder="Search issues..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={setFilterOption}
+                    options={ISSUE_STATUS_FILTER_OPTIONS}
+                    aria-label="Filter issues by status"
                 />
+                <SearchInput
+                    value={searchQuery}
+                    onChange={setSearchQuery}
+                    placeholder="Search issues..."
+                />
+                <Button
+                    size="small"
+                    onClick={resetFilters}
+                >
+                    X
+                </Button>
             </Filters>
 
             {loading && issues.length === 0 ? (
-                <Loading message="Loading issues..." />
+                <Loading message={isSearching ? 'Searching issues...' : 'Loading issues...'} />
             ) : (
                 <>
                     <IssuesList>
-                        {filteredIssues.map((issue) => (
+                        {issues.map((issue) => (
                             <IssueCard
                                 key={issue.id}
                                 issue={issue}
@@ -99,9 +62,9 @@ export const IssuesListPage = () => {
                         ))}
                     </IssuesList>
 
-                    {filteredIssues.length === 0 && searchQuery && (
+                    {issues.length === 0 && debouncedSearchQuery && (
                         <EmptyState>
-                            <p>No issues found matching "{searchQuery}"</p>
+                            <p>No issues found matching "{debouncedSearchQuery}"</p>
                         </EmptyState>
                     )}
 

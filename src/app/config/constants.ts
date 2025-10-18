@@ -16,6 +16,12 @@ export const ISSUE_FILTER_OPTIONS = {
 
 export type IssueFilterOption = keyof typeof ISSUE_FILTER_OPTIONS;
 
+export const ISSUE_FILTER_LABELS: Record<IssueFilterOption, string> = {
+    OPEN: 'Open',
+    CLOSED: 'Closed',
+    ALL: 'All',
+} as const;
+
 export const DEFAULT_SORT = {
     ISSUES: {
         field: 'CREATED_AT',
@@ -26,3 +32,5 @@ export const DEFAULT_SORT = {
         direction: 'DESC',
     },
 } as const;
+
+export const COMMENTS_AMOUNT: number = 50;

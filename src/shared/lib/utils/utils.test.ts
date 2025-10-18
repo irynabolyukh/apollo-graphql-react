@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { formatDate } from './utils';
-import { sanitizeHtml } from '@/shared/lib/utils/sanitize.ts';
+import { sanitizeHtml } from './sanitize.ts';
+import { formatDate } from './formatDate.ts';
+import { buildGitHubSearchQuery } from '@/shared/lib/utils/buildGitHubSearchQuery.ts';
 describe('utils', () => {
     describe('formatDate', () => {
         beforeEach(() => {
@@ -36,6 +37,48 @@ describe('utils', () => {
             const clean = sanitizeHtml(html);
             expect(clean).toContain('target="_blank"');
             expect(clean).toContain('rel="noopener noreferrer"');
+        });
+    });
+
+    describe('buildGitHubSearchQuery', () => {
+        it('builds query with all parameters', () => {
+            const result = buildGitHubSearchQuery({
+                owner: 'facebook',
+                repo: 'react',
+                type: 'issue',
+                state: 'OPEN',
+                searchTerm: 'memory leak',
+                sort: 'created-desc',
+            });
+
+            expect(result).toBe('repo:facebook/react is:issue state:open sort:created-desc memory leak');
+        });
+
+        it('excludes state filter when ALL', () => {
+            const result = buildGitHubSearchQuery({
+                owner: 'facebook',
+                repo: 'react',
+                type: 'issue',
+                state: 'ALL',
+                searchTerm: 'hooks',
+                sort: 'created-desc',
+            });
+
+            expect(result).toBe('repo:facebook/react is:issue sort:created-desc hooks');
+            expect(result).not.toContain('state:');
+        });
+
+        it('supports pr type', () => {
+            const result = buildGitHubSearchQuery({
+                owner: 'facebook',
+                repo: 'react',
+                type: 'pr',
+                state: 'OPEN',
+                searchTerm: 'fix',
+                sort: 'created-desc',
+            });
+
+            expect(result).toBe('repo:facebook/react is:pr state:open sort:created-desc fix');
         });
     });
 });

@@ -1,10 +1,6 @@
 import styled from 'styled-components';
 import { colors, fontSizes, fontWeights, spacing, flexRow, flexColumn, circularAvatar } from '@/shared/styles';
 
-export const Header = styled.div`
-    margin-bottom: ${spacing.lg};
-`;
-
 export const TitleRow = styled.div`
     ${flexRow(spacing.sm)}
     margin-bottom: ${spacing.sm};
@@ -53,10 +49,6 @@ export const Metadata = styled.div`
 
 export const Separator = styled.span`
     margin: 0 ${spacing.xs};
-`;
-
-export const Body = styled.div`
-    margin-bottom: ${spacing.xl};
 `;
 
 export const Footer = styled.div`

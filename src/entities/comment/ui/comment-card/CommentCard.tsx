@@ -3,16 +3,17 @@ import { formatDate } from '@/shared/lib/utils';
 import { Card } from '@/shared/ui/card';
 import Link from '@/shared/ui/link';
 import HtmlContent from '@/shared/ui/html-content';
-import { Header, Avatar, AuthorInfo, AuthorName, Timestamp } from './CommentCard.styles';
+import { TopContent, Avatar, AuthorInfo, AuthorName, Timestamp } from './CommentCard.styles';
+import { memo } from 'react';
 
 interface CommentCardProps {
     comment: Comment;
 }
 
-export const CommentCard = ({ comment }: CommentCardProps) => {
+const CommentCard = ({ comment }: CommentCardProps) => {
     return (
         <Card>
-            <Header>
+            <TopContent>
                 {comment.author?.avatarUrl && (
                     <Avatar
                         src={comment.author.avatarUrl}
@@ -33,9 +34,11 @@ export const CommentCard = ({ comment }: CommentCardProps) => {
                         {comment.createdAt !== comment.updatedAt && ' (edited)'}
                     </Timestamp>
                 </AuthorInfo>
-            </Header>
+            </TopContent>
 
             <HtmlContent html={comment.bodyHTML} />
         </Card>
     );
 };
+
+export default memo(CommentCard);
