@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { colors, fontSizes, fontWeights, spacing, flexColumn } from '@/shared/styles';
+import { colors, fontSizes, fontWeights, spacing, flexCenter, flexRow } from '@/shared/styles';
 
 export const Container = styled.div`
-    ${flexColumn(spacing.lg)}
-    align-items: center;
-    justify-content: center;
+    ${flexCenter};
+    flex-direction: column;
+    gap: ${spacing.lg};
     min-height: 60vh;
     padding: ${spacing.xl};
     text-align: center;
@@ -30,8 +30,7 @@ export const Description = styled.p`
 `;
 
 export const Actions = styled.div`
-    display: flex;
-    gap: ${spacing.md};
+    ${flexRow(spacing.md)}
     margin-top: ${spacing.md};
 
     a {
@@ -63,4 +62,3 @@ export const Details = styled.details`
         word-break: break-word;
     }
 `;
-

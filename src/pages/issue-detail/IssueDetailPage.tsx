@@ -1,11 +1,11 @@
 import { useParams } from 'react-router-dom';
 import { IssueDetails } from '@/entities/issue/ui';
-import { CommentCard } from '@/entities/comment/ui';
+import { CommentsList } from '@/entities/comment/ui';
 import Loading from '@/shared/ui/loading';
 import Link from '@/shared/ui/link';
 import ErrorMessage from '@/shared/ui/error-message';
 import { PATHS } from '@/routes/constants';
-import { CommentsTitle, CommentsList } from './IssueDetailPage.styles';
+import { CommentsTitle } from './IssueDetailPage.styles';
 import { spacing } from '@/shared/styles';
 import { useIssueDetails } from '@/entities/issue/hooks/useIssueDetails.ts';
 
@@ -21,7 +21,7 @@ export const IssueDetailPage = () => {
         );
     }
 
-    const { issue, comments, loading, error } = useIssueDetails(number);
+    const { issue, initialComments, commentsPageInfo, totalComments, loading, error } = useIssueDetails(number);
 
     if (loading) {
         return <Loading message="Loading issue details..." />;
@@ -57,17 +57,15 @@ export const IssueDetailPage = () => {
 
             <IssueDetails issue={issue} />
 
-            {comments.length > 0 && (
+            {totalComments > 0 && (
                 <>
-                    <CommentsTitle>Comments ({comments.length})</CommentsTitle>
-                    <CommentsList>
-                        {comments.map((comment) => (
-                            <CommentCard
-                                key={comment.id}
-                                comment={comment}
-                            />
-                        ))}
-                    </CommentsList>
+                    <CommentsTitle>Comments ({totalComments})</CommentsTitle>
+                    <CommentsList
+                        issueNumber={number}
+                        initialComments={initialComments}
+                        hasMoreComments={commentsPageInfo?.hasNextPage ?? false}
+                        totalCount={totalComments}
+                    />
                 </>
             )}
         </>

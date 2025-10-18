@@ -1,26 +1,29 @@
 import { useMemo } from 'react';
 import { useQuery } from '@apollo/client/react';
-import { COMMENTS_AMOUNT, DEFAULT_SORT, GITHUB_CONFIG } from '@/app/config';
+import { INITIAL_COMMENTS_AMOUNT, DEFAULT_SORT, GITHUB_CONFIG } from '@/app/config';
 import { GET_ISSUE_DETAILS } from '@/entities/issue/api';
 import type { GetIssueDetailsQuery, GetIssueDetailsQueryVariables } from '@/graphql/generated.ts';
 import { type IssueDetail, mapToIssueDetail } from '@/entities/issue/model';
 import { mapToComment, type Comment } from '@/entities/comment/model';
-import { mapEdges } from '@/shared/lib/apollo/apollo-helpers';
+import { mapEdges, extractTotalCount } from '@/shared/lib/apollo/apollo-helpers';
 
 /**
- * Hook for fetching repository issue details with comments
+ * Hook for fetching repository issue details with initial comments
  */
 export const useIssueDetails = (number: string) => {
-    const { data, loading, error } = useQuery<GetIssueDetailsQuery, GetIssueDetailsQueryVariables>(GET_ISSUE_DETAILS, {
-        variables: {
-            owner: GITHUB_CONFIG.owner,
-            repo: GITHUB_CONFIG.repo,
-            number: parseInt(number || '0', 10),
-            commentsOrderBy: DEFAULT_SORT.COMMENTS,
-            commentsAmount: COMMENTS_AMOUNT,
-        },
-        skip: !number,
-    });
+    const { data, loading, error } = useQuery<GetIssueDetailsQuery, GetIssueDetailsQueryVariables>(
+        GET_ISSUE_DETAILS,
+        {
+            variables: {
+                owner: GITHUB_CONFIG.owner,
+                repo: GITHUB_CONFIG.repo,
+                number: parseInt(number || '0'),
+                commentsOrderBy: DEFAULT_SORT.COMMENTS,
+                commentsAmount: INITIAL_COMMENTS_AMOUNT,
+            },
+            skip: !number,
+        }
+    );
 
     const issueData = data?.repository?.issue;
 
@@ -28,16 +31,20 @@ export const useIssueDetails = (number: string) => {
         return issueData ? mapToIssueDetail(issueData) : null;
     }, [issueData]);
 
-    const comments = useMemo<Comment[]>(() => {
+    const initialComments = useMemo<Comment[]>(() => {
         if (!issueData?.comments?.edges) return [];
         return mapEdges(issueData.comments.edges, mapToComment);
     }, [issueData?.comments?.edges]);
 
+    const commentsPageInfo = issueData?.comments?.pageInfo ?? null;
+    const totalComments = extractTotalCount(issueData?.comments);
+
     return {
-        data,
         loading,
         error,
-        comments,
         issue,
+        initialComments,
+        commentsPageInfo,
+        totalComments,
     };
 };

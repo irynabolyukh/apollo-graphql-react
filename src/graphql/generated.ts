@@ -35673,7 +35673,7 @@ export type GetIssueCommentsQueryVariables = Exact<{
 }>;
 
 
-export type GetIssueCommentsQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', issue?: { __typename?: 'Issue', id: string, comments: { __typename?: 'IssueCommentConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null | undefined, endCursor?: string | null | undefined }, edges?: Array<{ __typename?: 'IssueCommentEdge', cursor: string, node?: { __typename?: 'IssueComment', id: string, body: string, bodyHTML: string, createdAt: string, updatedAt: string, author?:
+export type GetIssueCommentsQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', id: string, issue?: { __typename?: 'Issue', id: string, comments: { __typename?: 'IssueCommentConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null | undefined, endCursor?: string | null | undefined }, edges?: Array<{ __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, bodyHTML: string, createdAt: string, updatedAt: string, author?:
               | { __typename?: 'Bot', login: string, avatarUrl: string, url: string }
               | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: string, url: string }
               | { __typename?: 'Mannequin', login: string, avatarUrl: string, url: string }
@@ -35744,10 +35744,11 @@ export type GetIssueDetailsQueryVariables = Exact<{
   number: Scalars['Int']['input'];
   commentsOrderBy?: InputMaybe<IssueCommentOrder>;
   commentsAmount: Scalars['Int']['input'];
+  commentsAfter?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetIssueDetailsQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', id: string, issue?: { __typename?: 'Issue', closedAt?: string | null | undefined, body: string, bodyHTML: string, id: string, number: number, title: string, state: IssueState, createdAt: string, updatedAt: string, url: string, comments: { __typename?: 'IssueCommentConnection', totalCount: number, edges?: Array<{ __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, bodyHTML: string, createdAt: string, updatedAt: string, author?:
+export type GetIssueDetailsQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', id: string, issue?: { __typename?: 'Issue', closedAt?: string | null | undefined, body: string, bodyHTML: string, id: string, number: number, title: string, state: IssueState, createdAt: string, updatedAt: string, url: string, comments: { __typename?: 'IssueCommentConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null | undefined, endCursor?: string | null | undefined }, edges?: Array<{ __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string, body: string, bodyHTML: string, createdAt: string, updatedAt: string, author?:
               | { __typename?: 'Bot', login: string, avatarUrl: string, url: string }
               | { __typename?: 'EnterpriseUserAccount', login: string, avatarUrl: string, url: string }
               | { __typename?: 'Mannequin', login: string, avatarUrl: string, url: string }

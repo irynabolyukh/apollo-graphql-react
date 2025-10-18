@@ -1,5 +1,5 @@
 import styled, { keyframes, css } from 'styled-components';
-import { colors, fontSizes, spacing, flexCenter, circularAvatar } from '@/shared/styles';
+import { colors, fontSizes, spacing, flexCenter, flexColumn, circularAvatar } from '@/shared/styles';
 
 export type LoadingSize = 'small' | 'medium' | 'large';
 
@@ -32,15 +32,14 @@ const fullScreenStyle = css`
 `;
 
 export const Container = styled.div<{ $fullScreen?: boolean }>`
-    ${flexCenter}
+    ${flexCenter};
     padding: ${spacing.lg};
     ${({ $fullScreen }) => $fullScreen && fullScreenStyle}
 `;
 
 export const Content = styled.div`
-    ${flexCenter}
-    flex-direction: column;
-    gap: ${spacing.sm};
+    ${flexColumn(spacing.sm)};
+    align-items: center;
 `;
 
 export const Spinner = styled.div<{ $size: LoadingSize }>`

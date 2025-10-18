@@ -1,12 +1,15 @@
 import { gql } from '@apollo/client';
 import { ISSUE_LIST_ITEM_FRAGMENT, ISSUE_DETAIL_FRAGMENT, ISSUE_CORE_FRAGMENT } from './fragments';
 import { AUTHOR_FRAGMENT, LABEL_FRAGMENT } from '@/entities/common/api/fragments.ts';
+import { COMMENT_FRAGMENT } from '@/entities/comment/api/fragments';
+import { PAGE_INFO_FRAGMENT } from '@/graphql/fragments';
 
 /**
  * Query to fetch a list of issues from a repository
  */
 export const GET_REPOSITORY_ISSUES = gql`
     ${ISSUE_LIST_ITEM_FRAGMENT}
+    ${PAGE_INFO_FRAGMENT}
 
     query GetRepositoryIssues(
         $owner: String!
@@ -22,10 +25,7 @@ export const GET_REPOSITORY_ISSUES = gql`
             issues(first: $first, after: $after, states: $states, orderBy: $orderBy, filterBy: $filterBy) {
                 totalCount
                 pageInfo {
-                    hasNextPage
-                    hasPreviousPage
-                    startCursor
-                    endCursor
+                    ...PageInfo
                 }
                 edges {
                     cursor
@@ -43,7 +43,8 @@ export const GET_REPOSITORY_ISSUES = gql`
  */
 export const GET_ISSUE_DETAILS = gql`
     ${ISSUE_DETAIL_FRAGMENT}
-    ${AUTHOR_FRAGMENT}
+    ${COMMENT_FRAGMENT}
+    ${PAGE_INFO_FRAGMENT}
 
     query GetIssueDetails(
         $owner: String!
@@ -58,16 +59,12 @@ export const GET_ISSUE_DETAILS = gql`
                 ...IssueDetail
                 comments(first: $commentsAmount, orderBy: $commentsOrderBy) {
                     totalCount
+                    pageInfo {
+                        ...PageInfo
+                    }
                     edges {
                         node {
-                            id
-                            body
-                            bodyHTML
-                            createdAt
-                            updatedAt
-                            author {
-                                ...Author
-                            }
+                            ...Comment
                         }
                     }
                 }
@@ -85,15 +82,13 @@ export const SEARCH_ISSUES = gql`
     ${ISSUE_CORE_FRAGMENT}
     ${AUTHOR_FRAGMENT}
     ${LABEL_FRAGMENT}
+    ${PAGE_INFO_FRAGMENT}
 
     query SearchIssues($query: String!, $type: SearchType!, $first: Int!, $after: String) {
         search(query: $query, type: $type, first: $first, after: $after) {
             issueCount
             pageInfo {
-                hasNextPage
-                hasPreviousPage
-                startCursor
-                endCursor
+                ...PageInfo
             }
             edges {
                 cursor

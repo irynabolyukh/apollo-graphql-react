@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { colors, fontSizes, spacing, flexColumn } from '@/shared/styles';
+import { colors, fontSizes, spacing, flexCenter } from '@/shared/styles';
 
 export const Container = styled.div`
-    ${flexColumn(spacing.md)}
-    align-items: center;
-    justify-content: center;
+    ${flexCenter};
+    flex-direction: column;
+    gap: ${spacing.md};
     min-height: 100vh;
     padding: ${spacing.lg};
     text-align: center;
