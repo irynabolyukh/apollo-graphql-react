@@ -1,28 +1,61 @@
-import styled, { keyframes } from 'styled-components';
-import { colors, flexCenter, spacing } from '@/shared/styles';
+import styled, { keyframes, css } from 'styled-components';
+import { colors, fontSizes, spacing, flexCenter, circularAvatar } from '@/shared/styles';
+
+export type LoadingSize = 'small' | 'medium' | 'large';
 
 const spin = keyframes`
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 `;
 
-export const Container = styled.div`
-    ${flexCenter};
+const spinnerSizes = {
+    small: { size: '24px', borderWidth: '3px' },
+    medium: { size: '48px', borderWidth: '4px' },
+    large: { size: '64px', borderWidth: '5px' },
+};
+
+const messageSizes = {
+    small: fontSizes.xs,
+    medium: fontSizes.sm,
+    large: fontSizes.def,
+};
+
+const fullScreenStyle = css`
+    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: ${colors.background.primary};
+    z-index: 9999;
+`;
+
+export const Container = styled.div<{ $fullScreen?: boolean }>`
+    ${flexCenter}
     padding: ${spacing.lg};
-    text-align: center;
+    ${({ $fullScreen }) => $fullScreen && fullScreenStyle}
 `;
 
-export const Spinner = styled.div<{ $size: number }>`
-    width: ${({ $size }) => $size}px;
-    height: ${({ $size }) => $size}px;
-    border: 4px solid ${colors.background.secondary};
-    border-top: 4px solid ${colors.primary};
-    border-radius: 50%;
+export const Content = styled.div`
+    ${flexCenter}
+    flex-direction: column;
+    gap: ${spacing.sm};
+`;
+
+export const Spinner = styled.div<{ $size: LoadingSize }>`
+    ${({ $size }) => {
+        const { size, borderWidth } = spinnerSizes[$size];
+        return css`
+            ${circularAvatar(size)}
+            border: ${borderWidth} solid ${colors.background.secondary};
+            border-top: ${borderWidth} solid ${colors.primary};
+        `;
+    }}
     animation: ${spin} 1s linear infinite;
-    margin: 0 auto 12px;
 `;
 
-export const Message = styled.p<{ $fontSize: number }>`
+export const Message = styled.p<{ $size: LoadingSize }>`
     color: ${colors.text.secondary};
-    font-size: ${({ $fontSize }) => $fontSize}px;
+    font-size: ${({ $size }) => messageSizes[$size]};
 `;

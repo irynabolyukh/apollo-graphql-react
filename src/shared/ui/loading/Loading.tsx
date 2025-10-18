@@ -1,25 +1,18 @@
-import { Container, Spinner, Message } from './Loading.styles';
+import { Container, Content, Spinner, Message, type LoadingSize } from './Loading.styles';
 
 interface LoadingProps {
     message?: string;
-    size?: 'small' | 'medium' | 'large';
+    size?: LoadingSize;
+    fullScreen?: boolean;
 }
 
-const Loading = ({ message = 'Loading...', size = 'medium' }: LoadingProps) => {
-    const sizeMap = {
-        small: { spinner: 24, fontSize: 12 },
-        medium: { spinner: 48, fontSize: 14 },
-        large: { spinner: 64, fontSize: 16 },
-    };
-
-    const { spinner, fontSize } = sizeMap[size];
-
+const Loading = ({ message = 'Loading...', size = 'medium', fullScreen = false }: LoadingProps) => {
     return (
-        <Container>
-            <div>
-                <Spinner $size={spinner} />
-                {message && <Message $fontSize={fontSize}>{message}</Message>}
-            </div>
+        <Container $fullScreen={fullScreen} role="status" aria-live="polite" aria-label={message}>
+            <Content>
+                <Spinner $size={size} aria-hidden="true" />
+                {message && <Message $size={size}>{message}</Message>}
+            </Content>
         </Container>
     );
 };
