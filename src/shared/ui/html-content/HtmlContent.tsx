@@ -7,7 +7,6 @@ interface HtmlContentProps {
 }
 
 export const HtmlContent = ({ html }: HtmlContentProps) => {
-    // Memoize sanitization - expensive DOM operation
     const sanitizedHtml = useMemo(() => sanitizeHtml(html), [html]);
 
     return <HtmlWrapper dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />;
