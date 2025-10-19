@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { sanitizeHtml } from './sanitize.ts';
 import { formatDate } from './formatDate.ts';
 import { buildGitHubSearchQuery } from '@/shared/lib/utils/buildGitHubSearchQuery.ts';
+import { sanitizeSearchQuery, validateIssueNumber } from '@/shared/lib/utils/validation.ts';
 
 describe('utils', () => {
     describe('formatDate', () => {
@@ -80,6 +81,50 @@ describe('utils', () => {
             });
 
             expect(result).toBe('repo:facebook/react is:pr state:open sort:created-desc fix');
+        });
+    });
+
+    describe('validateIssueNumber', () => {
+        it('should return valid issue number as string', () => {
+            expect(validateIssueNumber('123')).toBe('123');
+        });
+
+        it('should return null for invalid inputs', () => {
+            expect(validateIssueNumber('')).toBeNull();
+            expect(validateIssueNumber(undefined)).toBeNull();
+            expect(validateIssueNumber('0')).toBeNull();
+            expect(validateIssueNumber('-5')).toBeNull();
+            expect(validateIssueNumber('abc')).toBeNull();
+            expect(validateIssueNumber('123abc')).toBeNull();
+            expect(validateIssueNumber('#789')).toBeNull();
+        });
+    });
+
+    describe('sanitizeSearchQuery', () => {
+        it('should trim whitespace', () => {
+            expect(sanitizeSearchQuery('  hello  ')).toBe('hello');
+            expect(sanitizeSearchQuery('\n\ttab\n')).toBe('tab');
+        });
+
+        it('should normalize multiple spaces', () => {
+            expect(sanitizeSearchQuery('hello    world')).toBe('hello world');
+            expect(sanitizeSearchQuery('a  b  c')).toBe('a b c');
+        });
+
+        it('should remove control characters', () => {
+            expect(sanitizeSearchQuery('hello\x00world')).toBe('helloworld');
+            expect(sanitizeSearchQuery('test\x1Fstring')).toBe('teststring');
+        });
+
+        it('should limit length to 500 characters', () => {
+            const longString = 'a'.repeat(600);
+            expect(sanitizeSearchQuery(longString)).toHaveLength(500);
+        });
+
+        it('should preserve valid search terms', () => {
+            expect(sanitizeSearchQuery('bug fix')).toBe('bug fix');
+            expect(sanitizeSearchQuery('feature: add login')).toBe('feature: add login');
+            expect(sanitizeSearchQuery('Fix #123')).toBe('Fix #123');
         });
     });
 });

@@ -8,20 +8,23 @@ import { PATHS } from '@/routes/constants';
 import { CommentsTitle } from './IssueDetailPage.styles';
 import { spacing } from '@/shared/styles';
 import { useIssueWithComments } from '@/features/issue-with-comments/hooks';
+import { validateIssueNumber } from '@/shared/lib/utils';
 
 export const IssueDetailPage = () => {
     const { number } = useParams<{ number: string }>();
+    const validatedNumber = validateIssueNumber(number);
 
-    if (!number) {
+    if (!validatedNumber) {
         return (
             <ErrorMessage
-                title="Invalid Issue"
-                message="Issue number is required"
+                title="Invalid Issue Number"
+                message="Please provide a valid issue number"
             />
         );
     }
 
-    const { issue, initialComments, commentsPageInfo, totalComments, loading, error } = useIssueWithComments(number);
+    const { issue, initialComments, commentsPageInfo, totalComments, loading, error } =
+        useIssueWithComments(validatedNumber);
 
     if (loading) {
         return <Loading message="Loading issue details..." />;
@@ -61,7 +64,7 @@ export const IssueDetailPage = () => {
                 <>
                     <CommentsTitle>Comments ({totalComments})</CommentsTitle>
                     <CommentsList
-                        issueNumber={number}
+                        issueNumber={validatedNumber}
                         initialComments={initialComments}
                         hasMoreComments={commentsPageInfo?.hasNextPage ?? false}
                         totalCount={totalComments}
