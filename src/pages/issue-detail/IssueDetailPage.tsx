@@ -7,7 +7,7 @@ import ErrorMessage from '@/shared/ui/error-message';
 import { PATHS } from '@/routes/constants';
 import { CommentsTitle } from './IssueDetailPage.styles';
 import { spacing } from '@/shared/styles';
-import { useIssueDetails } from '@/entities/issue/hooks/useIssueDetails.ts';
+import { useIssueWithComments } from '@/features/issue-with-comments/hooks';
 
 export const IssueDetailPage = () => {
     const { number } = useParams<{ number: string }>();
@@ -21,7 +21,7 @@ export const IssueDetailPage = () => {
         );
     }
 
-    const { issue, initialComments, commentsPageInfo, totalComments, loading, error } = useIssueDetails(number);
+    const { issue, initialComments, commentsPageInfo, totalComments, loading, error } = useIssueWithComments(number);
 
     if (loading) {
         return <Loading message="Loading issue details..." />;

@@ -10,7 +10,7 @@ import { mapEdges, extractTotalCount, extractPageInfo } from '@/graphql/helpers'
 /**
  * Hook for fetching repository issue details with initial comments
  */
-export const useIssueDetails = (number: string) => {
+export const useIssueWithComments = (number: string) => {
     const { data, loading, error } = useQuery<GetIssueDetailsQuery, GetIssueDetailsQueryVariables>(GET_ISSUE_DETAILS, {
         variables: {
             owner: GITHUB_CONFIG.owner,
