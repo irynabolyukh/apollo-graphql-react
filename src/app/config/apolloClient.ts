@@ -33,6 +33,14 @@ export const apolloClient = new ApolloClient({
                     },
                 },
             },
+            Issue: {
+                fields: {
+                    comments: {
+                        keyArgs: ['orderBy'],
+                        ...createEdgesMergePolicy(),
+                    },
+                },
+            },
         },
     }),
     defaultOptions: getDefaultOptions(),

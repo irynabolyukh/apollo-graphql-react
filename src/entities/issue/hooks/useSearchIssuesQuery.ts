@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import { SEARCH_ISSUES } from '../api/queries.ts';
-import { PAGINATION } from '@/app/config';
+import { ISSUE_PAGINATION } from '@/app/config';
 import type { SearchIssuesQuery, SearchIssuesQueryVariables } from '@/graphql/generated.ts';
 
 /**
@@ -11,7 +11,7 @@ export const useSearchIssuesQuery = (query: string, skip = false) => {
         variables: {
             query,
             type: 'ISSUE',
-            first: PAGINATION.DEFAULT_PAGE_SIZE,
+            first: ISSUE_PAGINATION.DEFAULT_PAGE_SIZE,
         },
         skip,
     });

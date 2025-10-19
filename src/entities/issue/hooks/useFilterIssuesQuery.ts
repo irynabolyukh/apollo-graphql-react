@@ -1,6 +1,12 @@
 import { useQuery } from '@apollo/client/react';
 import { GET_REPOSITORY_ISSUES } from '../api/queries.ts';
-import { GITHUB_CONFIG, PAGINATION, DEFAULT_SORT, type IssueFilterOption, ISSUE_FILTER_OPTIONS } from '@/app/config';
+import {
+    GITHUB_CONFIG,
+    DEFAULT_SORT,
+    type IssueFilterOption,
+    ISSUE_FILTER_OPTIONS,
+    ISSUE_PAGINATION,
+} from '@/app/config';
 import type { GetRepositoryIssuesQuery, GetRepositoryIssuesQueryVariables } from '@/graphql/generated.ts';
 
 /**
@@ -11,7 +17,7 @@ export const useFilterIssuesQuery = (filterOption: IssueFilterOption, skip = fal
         variables: {
             owner: GITHUB_CONFIG.owner,
             repo: GITHUB_CONFIG.repo,
-            first: PAGINATION.DEFAULT_PAGE_SIZE,
+            first: ISSUE_PAGINATION.DEFAULT_PAGE_SIZE,
             states: filterOption === ISSUE_FILTER_OPTIONS.ALL ? null : [filterOption],
             orderBy: DEFAULT_SORT.ISSUES,
         },
