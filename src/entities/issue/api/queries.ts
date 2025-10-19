@@ -75,8 +75,7 @@ export const GET_ISSUE_DETAILS = gql`
 
 /**
  * Query to search for issues within a specific repository
- * Note: GitHub's repository.issues doesn't support text search,
- * so we use the GitHub Search API
+ * using GitHub Search API
  */
 export const SEARCH_ISSUES = gql`
     ${ISSUE_CORE_FRAGMENT}

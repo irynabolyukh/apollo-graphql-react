@@ -11,7 +11,7 @@ import { extractEdges, extractPageInfo, hasTypename, isNonNull } from '@/shared/
  * Automatically switches between filter and search queries based on input
  *
  * @param filterOption - Filter by issue state
- * @param searchQuery - Search term for filtering issues
+ * @param searchQuery - Search term for filtering issues (debounced)
  * @returns Issues list with loading state, errors, and pagination handlers
  */
 export const useRepositoryIssues = (filterOption: IssueFilterOption, searchQuery: string) => {

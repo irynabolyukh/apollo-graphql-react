@@ -1,11 +1,9 @@
 import { mapEdges } from '@/shared/lib/apollo/apollo-helpers.ts';
 import type { IssueState } from '@/entities/issue/model';
 import type { Author, Label } from '@/entities/common/models';
+import type { AuthorFragment, LabelFragment, IssueCoreFragment } from '@/graphql/generated';
 
-/**
- * Maps GraphQL author data to domain model
- */
-export const mapAuthor = (author: any): Author | null => {
+export const mapAuthor = (author: AuthorFragment | null | undefined): Author | null => {
     if (!author?.login) return null;
     return {
         login: author.login,
@@ -14,26 +12,22 @@ export const mapAuthor = (author: any): Author | null => {
     };
 };
 
-/**
- * Maps GraphQL labels to domain model (without description)
- */
-export const mapLabels = (labels: any): Label[] => {
-    return mapEdges(labels?.edges, (node: Label) => ({
-        id: node.id || '',
-        name: node.name || '',
-        color: node.color || '',
+export const mapLabels = (
+    labels: { edges?: Array<{ node?: LabelFragment | null } | null | undefined> | null } | null | undefined,
+): Label[] => {
+    return mapEdges(labels?.edges, (node: LabelFragment) => ({
+        id: node.id,
+        name: node.name,
+        color: node.color,
     }));
 };
 
-/**
- * Maps core issue fields shared between list and detail views
- */
-export const mapCoreIssueFields = (node: any) => ({
+export const mapCoreIssueFields = (node: IssueCoreFragment) => ({
     id: node.id,
     number: node.number,
     title: node.title,
     state: node.state as IssueState,
-    createdAt: node.createdAt as string,
-    updatedAt: node.updatedAt as string,
+    createdAt: node.createdAt,
+    updatedAt: node.updatedAt,
     url: node.url,
 });

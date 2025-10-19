@@ -1,11 +1,7 @@
-import type { GetRepositoryIssuesQuery, GetIssueDetailsQuery } from '@/graphql/generated';
+import type { IssueListItemFragment, GetIssueDetailsQuery } from '@/graphql/generated';
 import { mapCoreIssueFields, mapAuthor, mapLabels } from '@/entities/common/mappers';
 import type { Author, Label } from '@/entities/common/models';
 import { extractTotalCount } from '@/shared/lib/apollo/apollo-helpers.ts';
-
-type IssueEdge = NonNullable<NonNullable<GetRepositoryIssuesQuery['repository']>['issues']['edges']>[number];
-
-type IssueNode = NonNullable<NonNullable<IssueEdge>['node']>;
 
 type IssueDetailsNode = NonNullable<NonNullable<GetIssueDetailsQuery['repository']>['issue']>;
 
@@ -50,7 +46,7 @@ export function isValidIssueState(state: string): state is IssueState {
     return state === 'OPEN' || state === 'CLOSED';
 }
 
-export function mapToIssueListItem(node: IssueNode): IssueListItem {
+export function mapToIssueListItem(node: IssueListItemFragment): IssueListItem {
     return {
         ...mapCoreIssueFields(node),
         bodyText: node.bodyText || '',
@@ -63,9 +59,9 @@ export function mapToIssueListItem(node: IssueNode): IssueListItem {
 export function mapToIssueDetail(issue: IssueDetailsNode): IssueDetail {
     return {
         ...mapCoreIssueFields(issue),
-        closedAt: (issue.closedAt as string) || null,
-        body: issue.body || '',
-        bodyHTML: issue.bodyHTML as string,
+        closedAt: issue.closedAt || null,
+        body: issue.body,
+        bodyHTML: issue.bodyHTML,
         author: mapAuthor(issue.author),
         labels: mapLabels(issue.labels),
         commentsCount: extractTotalCount(issue.comments),

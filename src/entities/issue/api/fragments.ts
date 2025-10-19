@@ -50,6 +50,7 @@ export const ISSUE_LIST_ITEM_FRAGMENT = gql`
 export const ISSUE_DETAIL_FRAGMENT = gql`
     ${ISSUE_CORE_FRAGMENT}
     ${AUTHOR_FRAGMENT}
+    ${LABEL_FRAGMENT}
 
     fragment IssueDetail on Issue {
         ...IssueCore
@@ -62,9 +63,7 @@ export const ISSUE_DETAIL_FRAGMENT = gql`
         labels(first: 20) {
             edges {
                 node {
-                    id
-                    name
-                    color
+                    ...Label
                 }
             }
         }

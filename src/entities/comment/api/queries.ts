@@ -4,7 +4,6 @@ import { PAGE_INFO_FRAGMENT } from '@/graphql/fragments';
 
 /**
  * Query to fetch comments for an issue with pagination
- * Used when user wants to see all comments
  */
 export const GET_ISSUE_COMMENTS = gql`
     ${COMMENT_FRAGMENT}
