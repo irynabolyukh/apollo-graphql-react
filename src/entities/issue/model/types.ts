@@ -1,7 +1,7 @@
 import type { IssueListItemFragment, GetIssueDetailsQuery } from '@/graphql/generated';
 import { mapCoreIssueFields, mapAuthor, mapLabels } from '@/entities/common/mappers';
 import type { Author, Label } from '@/entities/common/models';
-import { extractTotalCount } from '@/shared/lib/apollo/apollo-helpers.ts';
+import { extractTotalCount } from '@/graphql/helpers';
 
 type IssueDetailsNode = NonNullable<NonNullable<GetIssueDetailsQuery['repository']>['issue']>;
 

@@ -4,15 +4,10 @@ import { DEFAULT_SORT, GITHUB_CONFIG, COMMENT_PAGINATION } from '@/app/config';
 import { GET_ISSUE_COMMENTS } from '@/entities/comment/api';
 import type { GetIssueCommentsQuery, GetIssueCommentsQueryVariables } from '@/graphql/generated';
 import { mapToComment, type Comment } from '@/entities/comment/model';
-import { mapEdges } from '@/shared/lib/apollo/apollo-helpers';
+import { mapEdges, extractPageInfo } from '@/graphql/helpers';
 
 /**
  * Hook for managing on-demand comments pagination
- * Uses lazy query to fetch comments only when user requests them
- *
- * @param issueNumber - Issue number
- * @param initialComments - Comments from issue details query (shown initially)
- * @param hasMore - Whether more comments exist (from initial query)
  */
 export const useCommentsPagination = (issueNumber: string, initialComments: Comment[], hasMore: boolean) => {
     const [executeQuery, { data, loading, fetchMore, error }] = useLazyQuery<
@@ -27,7 +22,7 @@ export const useCommentsPagination = (issueNumber: string, initialComments: Comm
         return fetchedComments.length > 0 ? fetchedComments : initialComments;
     }, [data, initialComments]);
 
-    const pageInfo = data?.repository?.issue?.comments?.pageInfo ?? null;
+    const pageInfo = extractPageInfo(data?.repository?.issue?.comments);
 
     const loadMore = useCallback(() => {
         if (!data) {

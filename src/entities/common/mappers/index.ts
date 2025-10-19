@@ -1,4 +1,4 @@
-import { mapEdges } from '@/shared/lib/apollo/apollo-helpers.ts';
+import { mapEdges } from '@/graphql/helpers';
 import type { IssueState } from '@/entities/issue/model';
 import type { Author, Label } from '@/entities/common/models';
 import type { AuthorFragment, LabelFragment, IssueCoreFragment } from '@/graphql/generated';

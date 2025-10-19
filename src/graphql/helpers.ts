@@ -68,6 +68,20 @@ export function mapEdges<TNode, TResult>(
 }
 
 /**
+ * Filters GraphQL edges by typename and extracts nodes
+ */
+export function filterEdgesByTypename<T extends string, TNode extends { __typename?: string }>(
+    edges: ReadonlyArray<{ node?: TNode | null | undefined } | null | undefined> | null | undefined,
+    typename: T,
+): Array<TNode & { __typename: T }> {
+    if (!edges) return [];
+    return edges
+        .filter(isNonNullEdge)
+        .filter((edge) => hasTypename(edge.node, typename))
+        .map((edge) => edge.node as TNode & { __typename: T });
+}
+
+/**
  * Creates a type-safe field policy merge function for Apollo cache
  */
 export function createEdgesMergePolicy<T = any>() {

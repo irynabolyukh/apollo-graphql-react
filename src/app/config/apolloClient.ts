@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
 import { APOLLO_CONFIG, getDefaultOptions } from '@/app/config/index.ts';
-import { createEdgesMergePolicy } from '@/shared/lib/apollo/apollo-helpers.ts';
+import { createEdgesMergePolicy } from '@/graphql/helpers';
 
 if (!APOLLO_CONFIG.TOKEN) {
     throw new Error('Missing VITE_GITHUB_TOKEN. Please create a .env file with your GitHub token.');

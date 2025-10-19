@@ -5,7 +5,7 @@ import { GET_ISSUE_DETAILS } from '@/entities/issue/api';
 import type { GetIssueDetailsQuery, GetIssueDetailsQueryVariables } from '@/graphql/generated.ts';
 import { type IssueDetail, mapToIssueDetail } from '@/entities/issue/model';
 import { mapToComment, type Comment } from '@/entities/comment/model';
-import { mapEdges, extractTotalCount } from '@/shared/lib/apollo/apollo-helpers';
+import { mapEdges, extractTotalCount, extractPageInfo } from '@/graphql/helpers';
 
 /**
  * Hook for fetching repository issue details with initial comments
@@ -33,7 +33,7 @@ export const useIssueDetails = (number: string) => {
         return mapEdges(issueData.comments.edges, mapToComment);
     }, [issueData?.comments?.edges]);
 
-    const commentsPageInfo = issueData?.comments?.pageInfo ?? null;
+    const commentsPageInfo = extractPageInfo(issueData?.comments);
     const totalComments = extractTotalCount(issueData?.comments);
 
     return {

@@ -4,15 +4,11 @@ import { buildGitHubSearchQuery } from '@/shared/lib/utils';
 import { useFilterIssuesQuery } from './useFilterIssuesQuery';
 import { useSearchIssuesQuery } from './useSearchIssuesQuery';
 import { mapToIssueListItem, type IssueListItem } from '../model';
-import { extractEdges, extractPageInfo, hasTypename, isNonNull } from '@/shared/lib/apollo/apollo-helpers';
+import { extractPageInfo, filterEdgesByTypename, mapEdges } from '@/graphql/helpers';
 
 /**
  * Main hook for fetching repository issues with filtering and search
  * Automatically switches between filter and search queries based on input
- *
- * @param filterOption - Filter by issue state
- * @param searchQuery - Search term for filtering issues (debounced)
- * @returns Issues list with loading state, errors, and pagination handlers
  */
 export const useRepositoryIssues = (filterOption: IssueFilterOption, searchQuery: string) => {
     const hasSearchQuery = searchQuery.trim().length > 0;
@@ -44,14 +40,13 @@ export const useRepositoryIssues = (filterOption: IssueFilterOption, searchQuery
 
     const issues: IssueListItem[] = useMemo<IssueListItem[]>(() => {
         if (hasSearchQuery) {
-            const searchEdges = searchData?.search?.edges || [];
-            return searchEdges
-                .filter((edge: any) => edge?.node && hasTypename(edge.node, 'Issue'))
-                .map((edge: any) => mapToIssueListItem(edge.node))
-                .filter(isNonNull);
+            const issueNodes = filterEdgesByTypename(searchData?.search?.edges, 'Issue');
+            return mapEdges(
+                issueNodes.map((node) => ({ node })),
+                mapToIssueListItem,
+            );
         } else {
-            const issueNodes = extractEdges(repoData?.repository?.issues?.edges as any);
-            return issueNodes.map((node: any) => mapToIssueListItem(node)).filter(isNonNull);
+            return mapEdges(repoData?.repository?.issues?.edges, mapToIssueListItem);
         }
     }, [hasSearchQuery, searchData?.search?.edges, repoData?.repository?.issues?.edges]);
 
