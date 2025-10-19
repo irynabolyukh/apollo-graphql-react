@@ -74,21 +74,13 @@ src/
 
 ---
 
-## 🔒 Security Features
-
-- ✅ Input validation for URL parameters
-- ✅ Search query sanitization
-- ✅ XSS protection with DOMPurify
-- ✅ GraphQL injection prevention (parameterized queries)
-- ✅ Type-safe with TypeScript
-
----
-
 ## 📝 Future Improvements
 
 - [ ] Add page-based pagination
 - [ ] Add proxy not to disclose GIT token to client
 - [ ] Add skeletons for loading states
 - [ ] Improve test coverage
+- [ ] Add E2E tests
+- [ ] Add Husky for pre-commit hooks (eslint, prettier, test run)
 - [ ] Add URL search params (?search=&filter=)
 - [ ] Add theme provider (dark mode)
