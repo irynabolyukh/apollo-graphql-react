@@ -41,4 +41,8 @@ const CommentCard = ({ comment }: CommentCardProps) => {
     );
 };
 
-export default memo(CommentCard);
+const arePropsEqual = (prevProps: CommentCardProps, nextProps: CommentCardProps) => {
+    return prevProps.comment.id === nextProps.comment.id && prevProps.comment.updatedAt === nextProps.comment.updatedAt;
+};
+
+export default memo(CommentCard, arePropsEqual);

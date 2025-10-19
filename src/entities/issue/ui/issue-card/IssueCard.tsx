@@ -61,4 +61,8 @@ const IssueCard = ({ issue }: IssueCardProps) => {
     );
 };
 
-export default memo(IssueCard);
+const arePropsEqual = (prevProps: IssueCardProps, nextProps: IssueCardProps) => {
+    return prevProps.issue.id === nextProps.issue.id && prevProps.issue.updatedAt === nextProps.issue.updatedAt;
+};
+
+export default memo(IssueCard, arePropsEqual);
