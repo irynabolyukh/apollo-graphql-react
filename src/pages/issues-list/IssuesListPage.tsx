@@ -2,7 +2,7 @@ import { IssueCard } from '@/entities/issue/ui';
 import { useRepositoryIssues } from '@/entities/issue/hooks';
 import { useIssueFilters } from '@/features/filter-issues/hooks';
 import { ISSUE_STATUS_FILTER_OPTIONS } from '@/features/filter-issues/config';
-import { SearchInput } from '@/features/search-issues/ui/search-input';
+import { SearchInput } from '@/features/filter-issues/ui/search-input';
 import { StatusFilter } from '@/features/filter-issues/ui/status-filter';
 import Loading from '@/shared/ui/loading';
 import Button from '@/shared/ui/button';
