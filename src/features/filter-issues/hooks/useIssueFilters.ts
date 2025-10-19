@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useDebounce } from '@/shared/lib/hooks';
-import type { IssueFilterOption } from '@/app/config';
-import { ISSUE_FILTER_OPTIONS } from '@/app/config';
+import type { IssueFilterOption } from '@/app/config/constants';
+import { ISSUE_FILTER_OPTIONS } from '@/app/config/constants';
 
 const SEARCH_DEBOUNCE_MS = 500;
 

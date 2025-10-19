@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useQuery } from '@apollo/client/react';
-import { COMMENT_PAGINATION, DEFAULT_SORT, GITHUB_CONFIG } from '@/app/config';
+import { COMMENT_PAGINATION, DEFAULT_SORT, GITHUB_CONFIG } from '@/app/config/constants';
 import { GET_ISSUE_DETAILS } from '@/entities/issue/api';
 import type { GetIssueDetailsQuery, GetIssueDetailsQueryVariables } from '@/graphql/generated.ts';
 import { type IssueDetail, mapToIssueDetail } from '@/entities/issue/model';

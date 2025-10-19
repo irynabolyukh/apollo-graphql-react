@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
-import { APOLLO_CONFIG, getDefaultOptions } from '@/app/config/index.ts';
+import { APOLLO_CONFIG } from '@/app/config/constants';
 import { createEdgesMergePolicy } from '@/graphql/helpers';
 
 if (!APOLLO_CONFIG.TOKEN) {
@@ -15,7 +15,9 @@ const httpLink = new HttpLink({
 export const apolloClient = new ApolloClient({
     link: httpLink,
     cache: new InMemoryCache({
-        possibleTypes: APOLLO_CONFIG.CACHE_CONFIG.possibleTypes,
+        possibleTypes: {
+            Actor: ['Bot', 'EnterpriseUserAccount', 'Mannequin', 'Organization', 'User'] as string[],
+        },
         typePolicies: {
             Query: {
                 fields: {
@@ -43,5 +45,12 @@ export const apolloClient = new ApolloClient({
             },
         },
     }),
-    defaultOptions: getDefaultOptions(),
+    defaultOptions: {
+        watchQuery: {
+            fetchPolicy: 'cache-and-network',
+        },
+        query: {
+            fetchPolicy: 'cache-first',
+        },
+    },
 });

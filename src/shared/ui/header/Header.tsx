@@ -3,7 +3,7 @@ import { Container } from './Header.styles';
 import Link from '@/shared/ui/link';
 import { PATHS } from '@/routes/constants';
 import { fontSizes, fontWeights, colors, media } from '@/shared/styles';
-import { GITHUB_CONFIG } from '@/app/config';
+import { GITHUB_CONFIG } from '@/app/config/constants';
 
 const LogoLink = styled(Link)`
     font-size: ${fontSizes.xl};

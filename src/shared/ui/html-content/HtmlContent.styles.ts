@@ -165,7 +165,6 @@ export const HtmlWrapper = styled.div`
         text-decoration: line-through;
     }
 
-    /* Task list items (GitHub style) */
     .task-list-item {
         list-style: none;
 
@@ -174,15 +173,12 @@ export const HtmlWrapper = styled.div`
         }
     }
 
-    /* GitHub syntax highlighting classes */
     .highlight {
         background-color: ${colors.background.secondary};
     }
 
-    /* Ensure nested lists are properly styled */
     li > ul,
     li > ol {
         margin-top: ${spacing.xxs};
     }
 `;
-

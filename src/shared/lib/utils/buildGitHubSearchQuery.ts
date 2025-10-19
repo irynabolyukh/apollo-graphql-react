@@ -1,5 +1,5 @@
-import type { IssueFilterOption, GitHubSearchType, GitHubSearchSort } from '@/app/config';
-import { ISSUE_FILTER_OPTIONS } from '@/app/config';
+import type { IssueFilterOption, GitHubSearchType, GitHubSearchSort } from '@/app/config/constants';
+import { ISSUE_FILTER_OPTIONS } from '@/app/config/constants';
 
 export interface GitHubSearchQueryOptions {
     owner: string;
@@ -10,9 +10,6 @@ export interface GitHubSearchQueryOptions {
     sort?: GitHubSearchSort;
 }
 
-/**
- * Builds a GitHub search query string with proper filtering and sorting
- */
 export function buildGitHubSearchQuery({
     owner,
     repo,

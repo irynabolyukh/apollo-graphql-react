@@ -1,7 +1,6 @@
 import { mapEdges } from '@/graphql/helpers';
-import type { IssueState } from '@/entities/issue/model';
 import type { Author, Label } from '@/entities/common/models';
-import type { AuthorFragment, LabelFragment, IssueCoreFragment } from '@/graphql/generated';
+import type { AuthorFragment, LabelFragment } from '@/graphql/generated';
 
 export const mapAuthor = (author: AuthorFragment | null | undefined): Author | null => {
     if (!author?.login) return null;
@@ -21,13 +20,3 @@ export const mapLabels = (
         color: node.color,
     }));
 };
-
-export const mapCoreIssueFields = (node: IssueCoreFragment) => ({
-    id: node.id,
-    number: node.number,
-    title: node.title,
-    state: node.state as IssueState,
-    createdAt: node.createdAt,
-    updatedAt: node.updatedAt,
-    url: node.url,
-});

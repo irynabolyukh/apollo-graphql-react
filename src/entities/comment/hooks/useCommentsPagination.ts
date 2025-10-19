@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { useLazyQuery } from '@apollo/client/react';
-import { DEFAULT_SORT, GITHUB_CONFIG, COMMENT_PAGINATION } from '@/app/config';
+import { DEFAULT_SORT, GITHUB_CONFIG, COMMENT_PAGINATION } from '@/app/config/constants';
 import { GET_ISSUE_COMMENTS } from '@/entities/comment/api';
 import type { GetIssueCommentsQuery, GetIssueCommentsQueryVariables } from '@/graphql/generated';
 import { mapToComment, type Comment } from '@/entities/comment/model';

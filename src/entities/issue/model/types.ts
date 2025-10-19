@@ -1,5 +1,5 @@
 import type { IssueListItemFragment, GetIssueDetailsQuery } from '@/graphql/generated';
-import { mapCoreIssueFields, mapAuthor, mapLabels } from '@/entities/common/mappers';
+import { mapAuthor, mapLabels } from '@/entities/common/mappers';
 import type { Author, Label } from '@/entities/common/models';
 import { extractTotalCount } from '@/graphql/helpers';
 
@@ -37,19 +37,16 @@ export interface IssueDetail {
 
 export type IssueState = 'OPEN' | 'CLOSED';
 
-export const ISSUE_STATE = {
-    OPEN: 'OPEN' as IssueState,
-    CLOSED: 'CLOSED' as IssueState,
-} as const;
-
-export function isValidIssueState(state: string): state is IssueState {
-    return state === 'OPEN' || state === 'CLOSED';
-}
-
 export function mapToIssueListItem(node: IssueListItemFragment): IssueListItem {
     return {
-        ...mapCoreIssueFields(node),
-        bodyText: node.bodyText || '',
+        id: node.id,
+        number: node.number,
+        title: node.title,
+        state: node.state as IssueState,
+        createdAt: node.createdAt,
+        updatedAt: node.updatedAt,
+        url: node.url,
+        bodyText: node.bodyText,
         author: mapAuthor(node.author),
         labels: mapLabels(node.labels),
         commentsCount: extractTotalCount(node.comments),
@@ -58,7 +55,13 @@ export function mapToIssueListItem(node: IssueListItemFragment): IssueListItem {
 
 export function mapToIssueDetail(issue: IssueDetailsNode): IssueDetail {
     return {
-        ...mapCoreIssueFields(issue),
+        id: issue.id,
+        number: issue.number,
+        title: issue.title,
+        state: issue.state as IssueState,
+        createdAt: issue.createdAt,
+        updatedAt: issue.updatedAt,
+        url: issue.url,
         closedAt: issue.closedAt || null,
         body: issue.body,
         bodyHTML: issue.bodyHTML,

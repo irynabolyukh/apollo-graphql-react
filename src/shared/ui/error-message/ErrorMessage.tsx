@@ -9,9 +9,6 @@ export interface ErrorMessageProps {
     onRetry?: () => void;
 }
 
-/**
- * Extracts error message from error object or uses fallback
- */
 const getErrorMessage = (message: string | undefined, error: Error | undefined): string | ReactNode => {
     if (message) return message;
 

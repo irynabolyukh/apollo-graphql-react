@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import { SEARCH_ISSUES } from '../api/queries.ts';
-import { ISSUE_PAGINATION } from '@/app/config';
+import { ISSUE_PAGINATION } from '@/app/config/constants';
 import type { SearchIssuesQuery, SearchIssuesQueryVariables } from '@/graphql/generated.ts';
 
 /**

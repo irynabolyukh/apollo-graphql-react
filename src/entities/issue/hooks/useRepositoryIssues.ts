@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react';
-import { type IssueFilterOption, GITHUB_CONFIG } from '@/app/config';
+import { type IssueFilterOption, GITHUB_CONFIG } from '@/app/config/constants';
 import { buildGitHubSearchQuery } from '@/shared/lib/utils';
 import { useFilterIssuesQuery } from './useFilterIssuesQuery';
 import { useSearchIssuesQuery } from './useSearchIssuesQuery';
@@ -41,10 +41,7 @@ export const useRepositoryIssues = (filterOption: IssueFilterOption, searchQuery
     const issues: IssueListItem[] = useMemo<IssueListItem[]>(() => {
         if (hasSearchQuery) {
             const issueNodes = filterEdgesByTypename(searchData?.search?.edges, 'Issue');
-            return mapEdges(
-                issueNodes.map((node) => ({ node })),
-                mapToIssueListItem,
-            );
+            return issueNodes.map(mapToIssueListItem);
         } else {
             return mapEdges(repoData?.repository?.issues?.edges, mapToIssueListItem);
         }

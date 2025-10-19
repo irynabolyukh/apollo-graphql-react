@@ -1,65 +1,37 @@
-/**
- * Type guard to filter out null/undefined edges from GraphQL responses
- */
-export function isNonNullEdge<T>(edge: { node?: T | null | undefined } | null | undefined): edge is { node: T } {
+type GraphQLEdge<T> = { node?: T | null | undefined } | null | undefined;
+type GraphQLEdges<T> = ReadonlyArray<GraphQLEdge<T>> | null | undefined;
+
+type GraphQLPageInfo = {
+    hasNextPage?: boolean;
+    hasPreviousPage?: boolean;
+    startCursor?: string | null;
+    endCursor?: string | null;
+};
+
+type GraphQLConnection<T = unknown> = { pageInfo?: T | null } | null | undefined;
+type GraphQLCountable = { totalCount?: number } | null | undefined;
+
+function isNonNullEdge<T>(edge: GraphQLEdge<T>): edge is { node: T } {
     return edge !== null && edge !== undefined && edge.node !== null && edge.node !== undefined;
 }
 
-/**
- * Type guard to check if a value is non-null and non-undefined
- */
-export function isNonNull<T>(value: T | null | undefined): value is T {
+function isNonNull<T>(value: T | null | undefined): value is T {
     return value !== null && value !== undefined;
 }
 
-/**
- * Type guard for GraphQL typename
- */
-export function hasTypename<T extends string>(obj: any, typename: T): obj is { __typename: T } {
-    return obj?.__typename === typename;
+function hasTypename<T extends string>(obj: unknown, typename: T): obj is { __typename: T } {
+    return (obj as { __typename?: string })?.__typename === typename;
 }
 
-/**
- * Extracts nodes from GraphQL edges array with type safety
- * Filters out null/undefined edges and nodes
- */
-export function extractEdges<T>(
-    edges: ReadonlyArray<{ node?: T | null | undefined } | null | undefined> | null | undefined,
-): T[] {
-    if (!edges) return [];
-    return edges.filter(isNonNullEdge).map((edge) => edge.node);
-}
-
-/**
- * Extracts page info from GraphQL response
- * Returns null if not available
- */
-export function extractPageInfo<
-    T extends {
-        hasNextPage?: boolean;
-        hasPreviousPage?: boolean;
-        startCursor?: string | null;
-        endCursor?: string | null;
-    },
->(data: { pageInfo?: T | null } | null | undefined): T | null {
+export function extractPageInfo<T extends GraphQLPageInfo>(data: GraphQLConnection<T>): T | null {
     return data?.pageInfo ?? null;
 }
 
-/**
- * Extracts total count from GraphQL connection
- */
-export function extractTotalCount(data: { totalCount?: number } | null | undefined): number {
+export function extractTotalCount(data: GraphQLCountable): number {
     return data?.totalCount ?? 0;
 }
 
-/**
- * Maps GraphQL edges with a transform function
- * Automatically filters out null/undefined
- */
-export function mapEdges<TNode, TResult>(
-    edges: ReadonlyArray<{ node?: TNode | null | undefined } | null | undefined> | null | undefined,
-    mapper: (node: TNode) => TResult,
-): TResult[] {
+export function mapEdges<TNode, TResult>(edges: GraphQLEdges<TNode>, mapper: (node: TNode) => TResult): TResult[] {
     if (!edges) return [];
     return edges
         .filter(isNonNullEdge)
@@ -67,11 +39,8 @@ export function mapEdges<TNode, TResult>(
         .filter(isNonNull);
 }
 
-/**
- * Filters GraphQL edges by typename and extracts nodes
- */
 export function filterEdgesByTypename<T extends string, TNode extends { __typename?: string }>(
-    edges: ReadonlyArray<{ node?: TNode | null | undefined } | null | undefined> | null | undefined,
+    edges: GraphQLEdges<TNode>,
     typename: T,
 ): Array<TNode & { __typename: T }> {
     if (!edges) return [];
@@ -81,15 +50,12 @@ export function filterEdgesByTypename<T extends string, TNode extends { __typena
         .map((edge) => edge.node as TNode & { __typename: T });
 }
 
-/**
- * Creates a type-safe field policy merge function for Apollo cache
- */
-export function createEdgesMergePolicy<T = any>() {
+export function createEdgesMergePolicy<T = unknown>() {
     return {
         merge(
             existing: { edges?: T[] } | undefined,
             incoming: { edges?: T[] },
-            { args }: { args: Record<string, any> | null },
+            { args }: { args: Record<string, unknown> | null },
         ) {
             if (!existing || !args?.after) {
                 return incoming;

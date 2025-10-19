@@ -6,7 +6,7 @@ import {
     type IssueFilterOption,
     ISSUE_FILTER_OPTIONS,
     ISSUE_PAGINATION,
-} from '@/app/config';
+} from '@/app/config/constants';
 import type { GetRepositoryIssuesQuery, GetRepositoryIssuesQueryVariables } from '@/graphql/generated.ts';
 
 /**
