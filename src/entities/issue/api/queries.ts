@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 import { ISSUE_LIST_ITEM_FRAGMENT, ISSUE_DETAIL_FRAGMENT, ISSUE_CORE_FRAGMENT } from './fragments';
-import { AUTHOR_FRAGMENT, LABEL_FRAGMENT } from '@/entities/common/api/fragments.ts';
+import { AUTHOR_FRAGMENT, LABEL_FRAGMENT } from '@/entities/common/api/fragments';
 import { COMMENT_FRAGMENT } from '@/entities/comment/api/fragments';
 import { PAGE_INFO_FRAGMENT } from '@/graphql/fragments';
 

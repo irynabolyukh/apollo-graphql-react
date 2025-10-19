@@ -1,4 +1,4 @@
-export { useRepositoryIssues } from './useRepositoryIssues.ts';
+export { useRepositoryIssues } from './useRepositoryIssues';
 
-export { useFilterIssuesQuery } from './useFilterIssuesQuery.ts';
-export { useSearchIssuesQuery } from './useSearchIssuesQuery.ts';
+export { useFilterIssuesQuery } from './useFilterIssuesQuery';
+export { useSearchIssuesQuery } from './useSearchIssuesQuery';

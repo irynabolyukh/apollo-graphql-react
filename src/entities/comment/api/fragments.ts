@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { AUTHOR_FRAGMENT } from '@/entities/common/api/fragments.ts';
+import { AUTHOR_FRAGMENT } from '@/entities/common/api/fragments';
 
 export const COMMENT_FRAGMENT = gql`
     ${AUTHOR_FRAGMENT}

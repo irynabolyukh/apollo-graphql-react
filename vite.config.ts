@@ -50,7 +50,7 @@ export default defineConfig({
         },
     },
     esbuild: {
-        drop: ['console', 'debugger'],
+        // drop: ['console', 'debugger'],
         legalComments: 'none',
         jsx: 'automatic',
     },

@@ -1,1 +1,1 @@
-export { useDebounce } from './useDebounce.ts';
+export { useDebounce } from './useDebounce';

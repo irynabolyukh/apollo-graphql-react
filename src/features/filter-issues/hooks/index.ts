@@ -1,1 +1,1 @@
-export { useIssueFilters } from './useIssueFilters.ts';
+export { useIssueFilters } from './useIssueFilters';

@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { AUTHOR_FRAGMENT, LABEL_FRAGMENT } from '@/entities/common/api/fragments.ts';
+import { AUTHOR_FRAGMENT, LABEL_FRAGMENT } from '@/entities/common/api/fragments';
 
 /**
  * Core issue fields used across all issue queries

@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
+import { relayStylePagination } from '@apollo/client/utilities';
 import { APOLLO_CONFIG } from '@/app/config/constants';
-import { createEdgesMergePolicy } from '@/graphql/helpers';
 
 if (!APOLLO_CONFIG.TOKEN) {
     throw new Error('Missing VITE_GITHUB_TOKEN. Please create a .env file with your GitHub token.');
@@ -21,26 +21,17 @@ export const apolloClient = new ApolloClient({
         typePolicies: {
             Query: {
                 fields: {
-                    search: {
-                        keyArgs: ['query', 'type'],
-                        ...createEdgesMergePolicy(),
-                    },
+                    search: relayStylePagination(['query', 'type']),
                 },
             },
             Repository: {
                 fields: {
-                    issues: {
-                        keyArgs: ['states'],
-                        ...createEdgesMergePolicy(),
-                    },
+                    issues: relayStylePagination(['states']),
                 },
             },
             Issue: {
                 fields: {
-                    comments: {
-                        keyArgs: ['orderBy'],
-                        ...createEdgesMergePolicy(),
-                    },
+                    comments: relayStylePagination(['orderBy']),
                 },
             },
         },

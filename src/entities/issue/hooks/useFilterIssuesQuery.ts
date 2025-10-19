@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client/react';
-import { GET_REPOSITORY_ISSUES } from '../api/queries.ts';
+import { GET_REPOSITORY_ISSUES } from '../api/queries';
 import {
     GITHUB_CONFIG,
     DEFAULT_SORT,
@@ -7,7 +7,7 @@ import {
     ISSUE_FILTER_OPTIONS,
     ISSUE_PAGINATION,
 } from '@/app/config/constants';
-import type { GetRepositoryIssuesQuery, GetRepositoryIssuesQueryVariables } from '@/graphql/generated.ts';
+import type { GetRepositoryIssuesQuery, GetRepositoryIssuesQueryVariables } from '@/graphql/generated';
 
 /**
  * Hook for fetching repository issues with filter for states

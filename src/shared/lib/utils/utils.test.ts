@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { sanitizeHtml } from './sanitize.ts';
-import { formatDate } from './formatDate.ts';
-import { buildGitHubSearchQuery } from '@/shared/lib/utils/buildGitHubSearchQuery.ts';
-import { sanitizeSearchQuery, validateIssueNumber } from '@/shared/lib/utils/validation.ts';
+import { sanitizeHtml } from './sanitize';
+import { formatDate } from './formatDate';
+import { buildGitHubSearchQuery } from '@/shared/lib/utils/buildGitHubSearchQuery';
+import { sanitizeSearchQuery, validateIssueNumber } from '@/shared/lib/utils/validation';
 
 describe('utils', () => {
     describe('formatDate', () => {
@@ -54,6 +54,19 @@ describe('utils', () => {
             });
 
             expect(result).toBe('repo:facebook/react is:issue state:open sort:created-desc memory leak');
+        });
+
+        it('should handle search terms with special GitHub search operators, but not with predefined filters', () => {
+            const result = buildGitHubSearchQuery({
+                owner: 'test',
+                repo: 'repo',
+                type: 'issue',
+                state: 'OPEN',
+                searchTerm: 'label:bug author:user state:closed',
+            });
+
+            expect(result).toContain('label:bug author:user');
+            expect(result).not.toContain('state:closed');
         });
 
         it('excludes state filter when ALL', () => {
@@ -114,6 +127,21 @@ describe('utils', () => {
         it('should remove control characters', () => {
             expect(sanitizeSearchQuery('hello\x00world')).toBe('helloworld');
             expect(sanitizeSearchQuery('test\x1Fstring')).toBe('teststring');
+        });
+
+        it('should remove conflicting state: operator', () => {
+            expect(sanitizeSearchQuery('bug state:closed')).toBe('bug');
+            expect(sanitizeSearchQuery('state:open memory leak')).toBe('memory leak');
+            expect(sanitizeSearchQuery('state:OPEN fix')).toBe('fix');
+        });
+
+        it('should preserve allowed GitHub operators like label: and author:', () => {
+            expect(sanitizeSearchQuery('label:bug author:user')).toBe('label:bug author:user');
+            expect(sanitizeSearchQuery('assignee:me milestone:v18')).toBe('assignee:me milestone:v18');
+        });
+
+        it('should handle multiple conflicting operators', () => {
+            expect(sanitizeSearchQuery('state:open is:pr repo:other/repo bug')).toBe('bug');
         });
 
         it('should limit length to 500 characters', () => {

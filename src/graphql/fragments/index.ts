@@ -1,1 +1,1 @@
-export { PAGE_INFO_FRAGMENT } from './fragments.ts';
+export { PAGE_INFO_FRAGMENT } from './fragments';

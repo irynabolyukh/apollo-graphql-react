@@ -16,6 +16,8 @@ export function sanitizeSearchQuery(value: string): string {
         .normalize('NFKC')
         .trim()
         .replace(/[\x00-\x1F\x7F]/g, '')
+        .replace(/(state|is|type|repo|sort):\S+/gi, '')
         .replace(/\s+/g, ' ')
+        .trim()
         .slice(0, 500);
 }

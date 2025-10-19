@@ -49,21 +49,3 @@ export function filterEdgesByTypename<T extends string, TNode extends { __typena
         .filter((edge) => hasTypename(edge.node, typename))
         .map((edge) => edge.node as TNode & { __typename: T });
 }
-
-export function createEdgesMergePolicy<T = unknown>() {
-    return {
-        merge(
-            existing: { edges?: T[] } | undefined,
-            incoming: { edges?: T[] },
-            { args }: { args: Record<string, unknown> | null },
-        ) {
-            if (!existing || !args?.after) {
-                return incoming;
-            }
-            return {
-                ...incoming,
-                edges: [...(existing.edges || []), ...(incoming.edges || [])],
-            };
-        },
-    };
-}
